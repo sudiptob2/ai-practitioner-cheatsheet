@@ -20,18 +20,20 @@ body_part = body_part.replace(
     '  <a href="flashcards.html" style="--c:var(--fg)">Flashcards →</a>')
 
 FAB = '''<a href="flashcards.html" class="fab" aria-label="Open flashcards" title="Flashcards">
-<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round">
-<rect x="3" y="7" width="13" height="14" rx="2"/>
-<path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"/>
-</svg></a>
+<img src="logo.svg" alt="" width="28" height="28"><span>Flashcards</span></a>
 <style>
 .fab { position: fixed; z-index: 30;
   right: calc(18px + env(safe-area-inset-right, 0px));
   bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--fg); display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(28, 36, 50, 0.35); }
-.fab:hover { background: var(--svc); }
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 16px; border-radius: 16px;
+  background: var(--fg); color: #fff; text-decoration: none;
+  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(28, 36, 50, 0.35);
+  transition: transform 0.08s ease; }
+.fab:hover { transform: translateY(-2px); }
+.fab:active { transform: scale(0.97); }
+@media (max-width: 520px) { .fab span { display: none; } .fab { padding: 12px; border-radius: 50%; } }
 </style>'''
 
 html = f'''<!doctype html>
@@ -42,6 +44,7 @@ html = f'''<!doctype html>
 <meta name="description" content="One-page community cheatsheet for the AWS Certified AI Practitioner exam (AIF-C01).">
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 {head_part}

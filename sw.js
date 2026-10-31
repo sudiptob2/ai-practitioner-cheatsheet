@@ -1,7 +1,7 @@
 // Pages: network-first (always fresh when online, cache offline).
 // Static assets: cache-first. Bump CACHE to force-clear old entries.
-const CACHE = 'aif-v2';
-const ASSETS = ['./', 'index.html', 'flashcards.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'aif-v3';
+const ASSETS = ['./', 'index.html', 'flashcards.html', 'manifest.webmanifest', 'logo.svg', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

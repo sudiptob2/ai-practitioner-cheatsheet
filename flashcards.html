@@ -6,6 +6,7 @@
 <meta name="description" content="Flashcards for the AWS Certified AI Practitioner exam (AIF-C01).">
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>AIF-C01 Flashcards</title>
@@ -39,8 +40,9 @@
   main { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; min-height: 100%; }
   .ribbon { height: 5px; border-radius: 99px; flex: none;
     background: linear-gradient(90deg, var(--exam) 0 16.6%, var(--ml) 0 33.3%, var(--genai) 0 50%, var(--svc) 0 66.6%, var(--rai) 0 83.3%, var(--sec) 0 100%); }
-  h1 { font-size: 20px; margin: 0; }
-  .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  h1 { font-size: 20px; margin: 0; display: flex; align-items: center; gap: 9px; }
+  h1 img { width: 26px; height: 26px; }
+  .top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
   .top a { color: var(--svc); font-size: 13px; }
   .filters { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .filters::-webkit-scrollbar { display: none; }
@@ -75,14 +77,30 @@
   .actions { display: flex; gap: 10px; flex: none; }
   .actions button {
     flex: 1; font-family: var(--sans); font-size: 16px; font-weight: 700; cursor: pointer;
-    padding: 13px 10px; border-radius: 14px; border: 1.5px solid;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 10px; border-radius: 12px; border: 1.5px solid;
+    transition: transform 0.06s ease, filter 0.15s ease, background 0.15s ease;
   }
-  #again { border-color: var(--sec); color: var(--sec); background: color-mix(in srgb, var(--sec) 8%, var(--panel)); }
-  #know { border-color: var(--rai); color: #fff; background: var(--rai); }
+  .actions button svg { flex: none; }
+  .actions button:active:not(:disabled) { transform: scale(0.96); }
+  #again { border-color: var(--sec); color: var(--sec); background: color-mix(in srgb, var(--sec) 7%, var(--panel)); }
+  #again:hover:not(:disabled) { background: color-mix(in srgb, var(--sec) 14%, var(--panel)); }
+  #know { border-color: var(--rai); color: #fff; background: var(--rai); box-shadow: 0 2px 6px color-mix(in srgb, var(--rai) 35%, transparent); }
+  #know:hover:not(:disabled) { filter: brightness(1.07); }
   .actions button:disabled { opacity: 0.4; cursor: default; }
-  .meta { font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; flex: none; }
-  .meta button { background: none; border: none; color: var(--svc); cursor: pointer; font-size: 12.5px; padding: 0; }
-  .meta .nav { color: var(--svc); font-weight: 600; }
+  .meta { font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; flex: none; }
+  .meta button {
+    font-family: var(--sans); font-size: 12.5px; cursor: pointer;
+    color: var(--fg); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 8px; padding: 3px 10px;
+  }
+  .meta button:hover { border-color: var(--svc); color: var(--svc); }
+  .meta #pos, .meta #progress { font-variant-numeric: tabular-nums; margin-right: 6px; }
+  kbd {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg);
+    border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px;
+    padding: 0 5px; background: color-mix(in srgb, var(--fg) 4%, var(--panel));
+  }
   label.hideknown { display: inline-flex; align-items: center; gap: 5px; }
   footer { font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; flex: none; }
   footer a { color: var(--svc); }
@@ -94,7 +112,7 @@
 <main>
   <div class="ribbon" aria-hidden="true"></div>
   <div class="top">
-    <h1>AIF-C01 Flashcards</h1>
+    <h1><img src="logo.svg" alt="">AIF-C01 Flashcards</h1>
     <a href="index.html">← cheatsheet</a>
   </div>
   <div class="filters" id="filters" role="group" aria-label="Filter by domain"></div>
@@ -107,8 +125,8 @@
     </div>
   </div>
   <div class="actions">
-    <button id="again">↩ Again</button>
-    <button id="know">Got it ✓</button>
+    <button id="again"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Again</button>
+    <button id="know"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>Got it</button>
   </div>
   <div class="meta">
     <span id="pos"></span>
@@ -120,7 +138,7 @@
     <button id="reset">reset progress</button>
   </div>
   <footer>
-    Tap to reveal · swipe right = got it · swipe left = again · Space flips, ← / → move, K = got it.
+    Tap to reveal · swipe right = got it · swipe left = again · <kbd>Space</kbd> flips, <kbd>←</kbd> <kbd>→</kbd> move, <kbd>K</kbd> = got it.
     Progress is stored only in this browser.
     Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a>.
   </footer>

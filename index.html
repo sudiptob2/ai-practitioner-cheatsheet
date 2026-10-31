@@ -6,6 +6,7 @@
 <meta name="description" content="One-page community cheatsheet for the AWS Certified AI Practitioner exam (AIF-C01).">
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>AWS AI Practitioner Cheatsheet</title>
@@ -41,7 +42,8 @@
     background: linear-gradient(90deg, var(--exam) 0 16.6%, var(--ml) 0 33.3%, var(--genai) 0 50%, var(--svc) 0 66.6%, var(--rai) 0 83.3%, var(--sec) 0 100%); }
   header { max-width: 1380px; margin: 0 auto 12px; }
   .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--svc); margin: 0 0 7px; }
-  h1 { font-size: 24px; font-weight: 700; margin: 0 0 5px; text-wrap: balance; }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 5px; display: flex; align-items: center; gap: 10px; }
+  h1 svg { width: 30px; height: 30px; flex: none; }
   .lede { color: var(--muted); font-size: 13px; max-width: 80ch; margin: 0 0 5px; }
   .byline { font-size: 12px; color: var(--muted); margin: 0; }
   a { color: var(--svc); }
@@ -155,7 +157,7 @@
 
 <div class="ribbon" aria-hidden="true"></div>
 <header>
-  <h1>AWS AI Practitioner Cheatsheet</h1>
+  <h1><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="3" width="25" height="35" rx="5" fill="#4f46e5" transform="rotate(10 25 20)"/><rect x="9" y="5" width="25" height="35" rx="5" fill="#7c3aed" transform="rotate(5 21 22)"/><rect x="5" y="8" width="27" height="37" rx="5" fill="#ffffff" stroke="#1c2432" stroke-width="2.4"/><path d="M6.2 13a3.8 3.8 0 0 1 3.8-3.8h17a3.8 3.8 0 0 1 3.8 3.8v3.6H6.2z" fill="#0e7490"/><rect x="11" y="23" width="15" height="3" rx="1.5" fill="#94a3b8"/><rect x="11" y="30" width="11" height="3" rx="1.5" fill="#94a3b8"/><rect x="11" y="37" width="13" height="3" rx="1.5" fill="#cbd5e1"/></svg>AWS AI Practitioner Cheatsheet</h1>
   <p class="byline">Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a></p>
 </header>
 
@@ -798,18 +800,20 @@ document.querySelectorAll('.domain').forEach((s) => navObserver.observe(s));
 </script>
 
 <a href="flashcards.html" class="fab" aria-label="Open flashcards" title="Flashcards">
-<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round">
-<rect x="3" y="7" width="13" height="14" rx="2"/>
-<path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"/>
-</svg></a>
+<img src="logo.svg" alt="" width="28" height="28"><span>Flashcards</span></a>
 <style>
 .fab { position: fixed; z-index: 30;
   right: calc(18px + env(safe-area-inset-right, 0px));
   bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--fg); display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(28, 36, 50, 0.35); }
-.fab:hover { background: var(--svc); }
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 16px; border-radius: 16px;
+  background: var(--fg); color: #fff; text-decoration: none;
+  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(28, 36, 50, 0.35);
+  transition: transform 0.08s ease; }
+.fab:hover { transform: translateY(-2px); }
+.fab:active { transform: scale(0.97); }
+@media (max-width: 520px) { .fab span { display: none; } .fab { padding: 12px; border-radius: 50%; } }
 </style>
 <script>try { navigator.serviceWorker && navigator.serviceWorker.register('sw.js'); } catch (e) {}</script>
 </body>
