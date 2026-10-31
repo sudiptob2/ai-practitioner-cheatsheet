@@ -95,7 +95,7 @@
   .wide .in { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: flex-start; }
   .wide .in > * { flex: 1 1 320px; min-width: 0; margin-top: 0; }
   .wide .in > figure { flex: 1.6 1 420px; }
-  .wide figure svg { max-width: 760px; margin: 0 auto; }
+  .wide figure svg { max-width: 660px; margin: 0 auto; }
   .stack > * + * { margin-top: 4px; }
   .ic { width: 16px; height: 16px; border-radius: 3px; vertical-align: -4px; margin-right: 5px; }
   .box h2 .ic { width: 14px; height: 14px; border-radius: 3px; vertical-align: -3px; margin-right: 6px; }
@@ -138,10 +138,8 @@
 
 <div class="ribbon" aria-hidden="true"></div>
 <header>
-  <p class="eyebrow">Free community study sheet</p>
   <h1>AWS AI Practitioner Cheatsheet</h1>
-  <p class="lede">Everything worth memorizing for the AIF-C01 exam on one page: the services, Bedrock, ML concepts, responsible AI, and the traps that repeat.</p>
-  <p class="byline">Built by <a href="https://github.com/sudiptob2">Sudipto Baral</a> · updated October 2026</p>
+  <p class="byline">Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a></p>
 </header>
 
 <nav class="chips" aria-label="Sections">
@@ -361,6 +359,7 @@
   <div class="in">
     <div class="stack">
     <p class="sm">FM cites data outside training. Knowledge Bases chunk docs → embeddings (Titan) → vector DB. Pick for real-time or proprietary data with <b class="hl">no retraining</b>.</p>
+    </div>
     <figure>
       <svg class="dg" role="img" aria-label="RAG: documents in S3 are chunked and embedded into a vector database; at query time the top matching chunks are added to the prompt before the Bedrock foundation model answers" viewBox="0 0 600 240">
         <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5e6b80"/></marker></defs>
@@ -763,7 +762,7 @@
 </section>
 
 <footer>
-  <p>Built by Sudipto Baral while preparing for the exam. The content is an original condensation of publicly documented AWS facts; studied through Stephane Maarek's AIF-C01 course, which is warmly recommended for full coverage. Service icons are from the official AWS Architecture Icons set; AWS and all service names are trademarks of Amazon.com, Inc. This sheet is unofficial and not affiliated with AWS. Verify exam logistics on the <a href="https://aws.amazon.com/certification/certified-ai-practitioner/">official exam page</a> before booking.</p>
+  <p>Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a>. Unofficial; AWS and all service names are trademarks of Amazon.com, Inc.</p>
 </footer>
 
 </body>
