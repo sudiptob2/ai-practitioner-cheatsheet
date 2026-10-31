@@ -113,7 +113,7 @@
   <div class="ribbon" aria-hidden="true"></div>
   <div class="top">
     <h1><img src="logo.svg" alt="">AIF-C01 Flashcards</h1>
-    <a href="index.html">← cheatsheet</a>
+    <a href="index.html">Back to cheatsheet</a>
   </div>
   <div class="filters" id="filters" role="group" aria-label="Filter by domain"></div>
   <div class="bar" aria-hidden="true"><i id="fill"></i></div>
@@ -131,14 +131,14 @@
   <div class="meta">
     <span id="pos"></span>
     <span id="progress"></span>
-    <button class="nav" id="prev">← prev</button>
-    <button class="nav" id="next">next →</button>
+    <button id="prev">Previous</button>
+    <button id="next">Next</button>
     <button id="shuffle">shuffle</button>
     <label class="hideknown"><input type="checkbox" id="hideknown"> hide known</label>
     <button id="reset">reset progress</button>
   </div>
   <footer>
-    Tap to reveal · swipe right = got it · swipe left = again · <kbd>Space</kbd> flips, <kbd>←</kbd> <kbd>→</kbd> move, <kbd>K</kbd> = got it.
+    Tap to reveal · swipe right = got it · swipe left = again · <kbd>Space</kbd> flips, the arrow keys move, <kbd>K</kbd> = got it.
     Progress is stored only in this browser.
     Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a>.
   </footer>
@@ -289,7 +289,7 @@ function render() {
   el('dom').textContent = DOMAINS[c.d].name;
   el('side').textContent = showingA ? '· answer' : '· question';
   el('text').textContent = showingA ? c.a : c.q;
-  el('hint').textContent = showingA ? 'Swipe → got it · swipe ← again' : 'Tap to reveal';
+  el('hint').textContent = showingA ? 'Swipe right for got it, left for again' : 'Tap to reveal';
   el('pos').textContent = `${done + 1} / ${roundSize}`;
   el('know').disabled = el('again').disabled = false;
 }

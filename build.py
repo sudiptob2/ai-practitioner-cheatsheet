@@ -17,7 +17,7 @@ head_part += '</style>'
 body_part = body_part.replace(
     '<a href="#answers" style="--c:var(--exam)">Fast answers</a>',
     '<a href="#answers" style="--c:var(--exam)">Fast answers</a>\n'
-    '  <a href="flashcards.html" style="--c:var(--fg)">Flashcards →</a>')
+    '  <a href="flashcards.html" style="--c:var(--fg)">Flashcards</a>')
 
 FAB = '''<a href="flashcards.html" class="fab" aria-label="Open flashcards" title="Flashcards">
 <img src="logo.svg" alt="" width="28" height="28"><span>Flashcards</span></a>
