@@ -2,7 +2,7 @@
 
 A free one-page cheatsheet and flashcard deck for the AWS Certified AI Practitioner exam (AIF-C01).
 
-**Live site:** https://sudiptob2.github.io/ai-practitioner-cheatsheet/
+**Live site:** https://sudiptobaral.com/ai-practitioner-cheatsheet/
 
 ## What is inside
 
