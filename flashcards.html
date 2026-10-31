@@ -28,53 +28,66 @@
     color-scheme: light;
   }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
     margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.5;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
-    padding-block: 14px 44px;
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   }
-  main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-  .ribbon { height: 5px; border-radius: 99px;
+  main { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; min-height: 100%; }
+  .ribbon { height: 5px; border-radius: 99px; flex: none;
     background: linear-gradient(90deg, var(--exam) 0 16.6%, var(--ml) 0 33.3%, var(--genai) 0 50%, var(--svc) 0 66.6%, var(--rai) 0 83.3%, var(--sec) 0 100%); }
-  h1 { font-size: 22px; margin: 0; }
+  h1 { font-size: 20px; margin: 0; }
   .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
   .top a { color: var(--svc); font-size: 13px; }
-  .filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filters { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .filters::-webkit-scrollbar { display: none; }
   .filters button {
     font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    border: 1.5px solid var(--c, var(--exam)); color: var(--c, var(--exam)); background: var(--panel);
-    padding: 4px 12px; border-radius: 99px; cursor: pointer;
+    white-space: nowrap; cursor: pointer; padding: 5px 13px; border-radius: 99px;
+    color: var(--c, var(--exam));
+    background: color-mix(in srgb, var(--c, var(--exam)) 10%, var(--panel));
+    border: 1px solid color-mix(in srgb, var(--c, var(--exam)) 35%, var(--panel));
   }
-  .filters button[aria-pressed="true"] { background: var(--c, var(--exam)); color: #fff; }
+  .filters button[aria-pressed="true"] { background: var(--c, var(--exam)); color: #fff; border-color: var(--c, var(--exam)); }
+  .bar { height: 5px; border-radius: 99px; background: color-mix(in srgb, var(--fg) 8%, transparent); overflow: hidden; flex: none; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--rai); border-radius: 99px; transition: width 0.2s; }
+  .stage { position: relative; flex: 1; min-height: 320px; display: flex; }
   .card {
-    border: 1px solid var(--line); border-radius: 14px; background: var(--panel);
-    border-top: 4px solid var(--c, var(--exam));
-    box-shadow: 0 2px 8px rgba(28, 36, 50, 0.07);
-    min-height: 240px; padding: 22px 24px; cursor: pointer;
+    flex: 1; border: 1.5px solid var(--line); border-radius: 18px; background: var(--panel);
+    border-top: 5px solid var(--c, var(--exam));
+    box-shadow: 0 3px 14px rgba(28, 36, 50, 0.09);
+    padding: 18px 20px calc(18px + 10px); cursor: pointer; user-select: none; -webkit-user-select: none;
     display: flex; flex-direction: column; gap: 10px;
+    touch-action: pan-y; will-change: transform;
   }
+  .card.anim { transition: transform 0.18s ease, opacity 0.18s ease; }
+  .card.swipe-right { border-color: var(--rai); }
+  .card.swipe-left { border-color: var(--sec); }
   .card .dom { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--c, var(--exam)); }
   .card .side { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
-  .card .text { font-size: 18px; font-weight: 600; margin: auto 0; }
-  .card.showing-a .text { font-weight: 400; font-size: 16px; }
-  .card .hint { font-size: 12px; color: var(--muted); }
-  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .row .spacer { flex: 1; }
-  button.act {
-    font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer;
-    border: 1px solid var(--line); background: var(--panel); color: var(--fg);
-    padding: 8px 16px; border-radius: 10px;
+  .card .text { font-size: 19px; font-weight: 600; margin: auto 0; text-wrap: balance; }
+  .card.showing-a .text { font-weight: 400; font-size: 16.5px; }
+  .card .hint { font-size: 12px; color: var(--muted); text-align: center; }
+  .done .text { text-align: center; }
+  .actions { display: flex; gap: 10px; flex: none; }
+  .actions button {
+    flex: 1; font-family: var(--sans); font-size: 16px; font-weight: 700; cursor: pointer;
+    padding: 13px 10px; border-radius: 14px; border: 1.5px solid;
   }
-  button.act.good { border-color: var(--rai); color: var(--rai); }
-  button.act.again { border-color: var(--sec); color: var(--sec); }
-  button.act:disabled { opacity: 0.45; cursor: default; }
-  .meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 16px; }
-  .meta button { background: none; border: none; color: var(--svc); cursor: pointer; font-size: 13px; padding: 0; }
-  label.hideknown { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
-  footer { font-size: 11.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+  #again { border-color: var(--sec); color: var(--sec); background: color-mix(in srgb, var(--sec) 8%, var(--panel)); }
+  #know { border-color: var(--rai); color: #fff; background: var(--rai); }
+  .actions button:disabled { opacity: 0.4; cursor: default; }
+  .meta { font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; flex: none; }
+  .meta button { background: none; border: none; color: var(--svc); cursor: pointer; font-size: 12.5px; padding: 0; }
+  .meta .nav { color: var(--svc); font-weight: 600; }
+  label.hideknown { display: inline-flex; align-items: center; gap: 5px; }
+  footer { font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; flex: none; }
   footer a { color: var(--svc); }
-  @media (prefers-reduced-motion: no-preference) { .card .text { transition: opacity 0.15s; } }
+  @media (prefers-reduced-motion: reduce) { .card.anim, .bar i { transition: none; } }
+  @media (min-width: 640px) { .stage { min-height: 380px; } }
 </style>
 </head>
 <body>
@@ -82,30 +95,32 @@
   <div class="ribbon" aria-hidden="true"></div>
   <div class="top">
     <h1>AIF-C01 Flashcards</h1>
-    <a href="index.html">← back to the cheatsheet</a>
+    <a href="index.html">← cheatsheet</a>
   </div>
   <div class="filters" id="filters" role="group" aria-label="Filter by domain"></div>
-  <div class="card" id="card" role="button" tabindex="0" aria-live="polite">
-    <div><span class="dom" id="dom"></span> <span class="side" id="side"></span></div>
-    <div class="text" id="text"></div>
-    <div class="hint" id="hint">Click or press Space to flip</div>
+  <div class="bar" aria-hidden="true"><i id="fill"></i></div>
+  <div class="stage">
+    <div class="card" id="card" role="button" tabindex="0" aria-live="polite">
+      <div><span class="dom" id="dom"></span> <span class="side" id="side"></span></div>
+      <div class="text" id="text"></div>
+      <div class="hint" id="hint"></div>
+    </div>
   </div>
-  <div class="row">
-    <button class="act" id="prev">← Prev</button>
-    <button class="act" id="next">Next →</button>
-    <span class="spacer"></span>
-    <button class="act again" id="again">Again</button>
-    <button class="act good" id="know">Got it ✓</button>
+  <div class="actions">
+    <button id="again">↩ Again</button>
+    <button id="know">Got it ✓</button>
   </div>
   <div class="meta">
     <span id="pos"></span>
     <span id="progress"></span>
+    <button class="nav" id="prev">← prev</button>
+    <button class="nav" id="next">next →</button>
+    <button id="shuffle">shuffle</button>
     <label class="hideknown"><input type="checkbox" id="hideknown"> hide known</label>
-    <button id="shuffle">Shuffle</button>
-    <button id="reset">Reset progress</button>
+    <button id="reset">reset progress</button>
   </div>
   <footer>
-    Keyboard: Space = flip, ← / → = previous / next, K = got it.
+    Tap to reveal · swipe right = got it · swipe left = again · Space flips, ← / → move, K = got it.
     Progress is stored only in this browser.
     Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a>.
   </footer>
@@ -211,10 +226,11 @@ const CARDS = [
 ];
 
 const el = (id) => document.getElementById(id);
-let filter = null;          // domain key or null = all
+const cardEl = el('card');
+let filter = null;
 let hideKnown = false;
-let order = CARDS.map((_, i) => i);
-let pos = 0;
+let queue = [];
+let roundSize = 0;
 let showingA = false;
 
 let known = new Set();
@@ -222,91 +238,157 @@ try { known = new Set(JSON.parse(localStorage.getItem('aif-known') || '[]')); } 
 const saveKnown = () => { try { localStorage.setItem('aif-known', JSON.stringify([...known])); } catch (e) {} };
 const cardId = (i) => CARDS[i].d + ':' + CARDS[i].q.slice(0, 40);
 
-function visible() {
-  return order.filter((i) =>
-    (!filter || CARDS[i].d === filter) && (!hideKnown || !known.has(cardId(i))));
+function buildQueue(shuffled) {
+  queue = CARDS.map((_, i) => i)
+    .filter((i) => (!filter || CARDS[i].d === filter) && (!hideKnown || !known.has(cardId(i))));
+  if (shuffled) queue.sort(() => Math.random() - 0.5);
+  roundSize = queue.length;
+  showingA = false;
 }
+function inScope() { return CARDS.map((_, i) => i).filter((i) => !filter || CARDS[i].d === filter); }
+
 function render() {
-  const v = visible();
-  const card = el('card');
-  if (v.length === 0) {
+  const scope = inScope();
+  const knownCount = scope.filter((i) => known.has(cardId(i))).length;
+  el('progress').textContent = `${knownCount} / ${scope.length} known`;
+  const done = roundSize - queue.length;
+  el('fill').style.width = roundSize ? `${(done / roundSize) * 100}%` : '0%';
+  cardEl.classList.remove('done');
+  if (queue.length === 0) {
+    cardEl.classList.add('done');
+    cardEl.style.setProperty('--c', 'var(--rai)');
     el('dom').textContent = '';
     el('side').textContent = '';
-    el('text').textContent = hideKnown ? 'All cards in this filter are marked as known. Nice.' : 'No cards here.';
-    el('hint').textContent = '';
-    el('pos').textContent = '0 cards';
-  } else {
-    if (pos >= v.length) pos = 0;
-    const c = CARDS[v[pos]];
-    card.style.setProperty('--c', DOMAINS[c.d].color);
-    card.classList.toggle('showing-a', showingA);
-    el('dom').textContent = DOMAINS[c.d].name;
-    el('side').textContent = showingA ? '· answer' : '· question';
-    el('text').textContent = showingA ? c.a : c.q;
-    el('hint').textContent = showingA ? '' : 'Click or press Space to flip';
-    el('pos').textContent = `card ${pos + 1} / ${v.length}`;
+    el('text').textContent = roundSize ? 'Round finished. Nice work.' : 'No cards in this filter.';
+    el('hint').textContent = 'Tap to start a new round';
+    el('pos').textContent = `${roundSize} / ${roundSize} done`;
+    el('know').disabled = el('again').disabled = true;
+    return;
   }
-  const inScope = order.filter((i) => !filter || CARDS[i].d === filter);
-  const knownCount = inScope.filter((i) => known.has(cardId(i))).length;
-  el('progress').textContent = `${knownCount} / ${inScope.length} known`;
-  el('know').disabled = el('again').disabled = v.length === 0;
+  const c = CARDS[queue[0]];
+  cardEl.style.setProperty('--c', DOMAINS[c.d].color);
+  cardEl.classList.toggle('showing-a', showingA);
+  el('dom').textContent = DOMAINS[c.d].name;
+  el('side').textContent = showingA ? '· answer' : '· question';
+  el('text').textContent = showingA ? c.a : c.q;
+  el('hint').textContent = showingA ? 'Swipe → got it · swipe ← again' : 'Tap to reveal';
+  el('pos').textContent = `${done + 1} / ${roundSize}`;
+  el('know').disabled = el('again').disabled = false;
 }
-function move(delta) { const v = visible(); if (!v.length) return; pos = (pos + delta + v.length) % v.length; showingA = false; render(); }
-function flip() { showingA = !showingA; render(); }
-function mark(isKnown) {
-  const v = visible(); if (!v.length) return;
-  const id = cardId(v[pos]);
-  if (isKnown) known.add(id); else known.delete(id);
-  saveKnown();
-  if (hideKnown && isKnown) { showingA = false; } else { move(1); return; }
+
+function flip() {
+  if (queue.length === 0) { buildQueue(true); render(); return; }
+  showingA = !showingA;
+  render();
+}
+function flyOut(dir, after) {
+  cardEl.classList.add('anim');
+  cardEl.style.transform = `translateX(${dir * 120}%) rotate(${dir * 10}deg)`;
+  cardEl.style.opacity = '0';
+  setTimeout(() => {
+    cardEl.classList.remove('anim', 'swipe-left', 'swipe-right');
+    cardEl.style.transform = '';
+    cardEl.style.opacity = '';
+    after();
+    render();
+  }, 190);
+}
+function markKnown() {
+  if (queue.length === 0) return;
+  flyOut(1, () => {
+    known.add(cardId(queue[0]));
+    saveKnown();
+    queue.shift();
+    showingA = false;
+  });
+}
+function markAgain() {
+  if (queue.length === 0) return;
+  flyOut(-1, () => {
+    const i = queue.shift();
+    known.delete(cardId(i));
+    saveKnown();
+    queue.splice(Math.min(5, queue.length), 0, i);  // see it again shortly
+    showingA = false;
+  });
+}
+function move(delta) {
+  if (queue.length < 2) return;
+  if (delta > 0) queue.push(queue.shift()); else queue.unshift(queue.pop());
+  showingA = false;
   render();
 }
 
 // filter chips
 const filters = el('filters');
-const allBtn = document.createElement('button');
-allBtn.textContent = 'All';
-allBtn.style.setProperty('--c', 'var(--fg)');
-allBtn.setAttribute('aria-pressed', 'true');
-filters.appendChild(allBtn);
-allBtn.onclick = () => setFilter(null);
-const domBtns = { all: allBtn };
-for (const [key, d] of Object.entries(DOMAINS)) {
+const domBtns = {};
+function addChip(key, name, color) {
   const b = document.createElement('button');
-  b.textContent = d.name;
-  b.style.setProperty('--c', d.color);
-  b.setAttribute('aria-pressed', 'false');
-  b.onclick = () => setFilter(key);
+  b.textContent = name;
+  b.style.setProperty('--c', color);
+  b.setAttribute('aria-pressed', String(key === 'all'));
+  b.onclick = () => setFilter(key === 'all' ? null : key);
   filters.appendChild(b);
   domBtns[key] = b;
 }
+addChip('all', 'All', 'var(--fg)');
+for (const [key, d] of Object.entries(DOMAINS)) addChip(key, d.name, d.color);
 function setFilter(key) {
-  filter = key; pos = 0; showingA = false;
+  filter = key;
   for (const [k, b] of Object.entries(domBtns)) b.setAttribute('aria-pressed', String(key === null ? k === 'all' : k === key));
+  buildQueue(false);
   render();
 }
 
-el('card').onclick = flip;
-el('card').onkeydown = (e) => { if (e.key === 'Enter') flip(); };
+// swipe gestures (pointer events cover touch and mouse)
+let dragX = 0, dragging = false, startX = 0, moved = false;
+cardEl.addEventListener('pointerdown', (e) => {
+  if (queue.length === 0) return;
+  dragging = true; moved = false; startX = e.clientX; dragX = 0;
+  cardEl.setPointerCapture(e.pointerId);
+  cardEl.classList.remove('anim');
+});
+cardEl.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  dragX = e.clientX - startX;
+  if (Math.abs(dragX) > 8) moved = true;
+  cardEl.style.transform = `translateX(${dragX}px) rotate(${dragX / 30}deg)`;
+  cardEl.classList.toggle('swipe-right', dragX > 50);
+  cardEl.classList.toggle('swipe-left', dragX < -50);
+});
+function endDrag() {
+  if (!dragging) return;
+  dragging = false;
+  if (dragX > 80) { markKnown(); return; }
+  if (dragX < -80) { markAgain(); return; }
+  cardEl.classList.add('anim');
+  cardEl.style.transform = '';
+  cardEl.classList.remove('swipe-left', 'swipe-right');
+}
+cardEl.addEventListener('pointerup', endDrag);
+cardEl.addEventListener('pointercancel', endDrag);
+cardEl.addEventListener('click', () => { if (!moved) flip(); });
+cardEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') flip(); });
+
+el('know').onclick = markKnown;
+el('again').onclick = markAgain;
 el('next').onclick = () => move(1);
 el('prev').onclick = () => move(-1);
-el('know').onclick = () => mark(true);
-el('again').onclick = () => mark(false);
-el('shuffle').onclick = () => { order.sort(() => Math.random() - 0.5); pos = 0; showingA = false; render(); };
-el('reset').onclick = () => { known.clear(); saveKnown(); render(); };
-el('hideknown').onchange = (e) => { hideKnown = e.target.checked; pos = 0; render(); };
+el('shuffle').onclick = () => { buildQueue(true); render(); };
+el('reset').onclick = () => { known.clear(); saveKnown(); buildQueue(false); render(); };
+el('hideknown').onchange = (e) => { hideKnown = e.target.checked; buildQueue(false); render(); };
 document.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
   if (e.key === ' ') { e.preventDefault(); flip(); }
   else if (e.key === 'ArrowRight') move(1);
   else if (e.key === 'ArrowLeft') move(-1);
-  else if (e.key.toLowerCase() === 'k') mark(true);
+  else if (e.key.toLowerCase() === 'k') markKnown();
 });
+
+buildQueue(false);
 render();
 
-// self-check: card data is well formed
 console.assert(CARDS.every((c) => DOMAINS[c.d] && c.q && c.a), 'malformed card data');
-
 try { navigator.serviceWorker && navigator.serviceWorker.register('sw.js'); } catch (e) {}
 </script>
 </body>

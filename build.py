@@ -19,6 +19,21 @@ body_part = body_part.replace(
     '<a href="#answers" style="--c:var(--exam)">Fast answers</a>\n'
     '  <a href="flashcards.html" style="--c:var(--fg)">Flashcards →</a>')
 
+FAB = '''<a href="flashcards.html" class="fab" aria-label="Open flashcards" title="Flashcards">
+<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round">
+<rect x="3" y="7" width="13" height="14" rx="2"/>
+<path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"/>
+</svg></a>
+<style>
+.fab { position: fixed; z-index: 30;
+  right: calc(18px + env(safe-area-inset-right, 0px));
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--fg); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(28, 36, 50, 0.35); }
+.fab:hover { background: var(--svc); }
+</style>'''
+
 html = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -34,6 +49,7 @@ html = f'''<!doctype html>
 </head>
 <body>
 {body_part}
+{FAB}
 <script>try {{ navigator.serviceWorker && navigator.serviceWorker.register('sw.js'); }} catch (e) {{}}</script>
 </body>
 </html>
