@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Flashcards for the AWS Certified AI Practitioner exam (AIF-C01).">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>AIF-C01 Flashcards</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
 <style>
@@ -302,6 +306,8 @@ render();
 
 // self-check: card data is well formed
 console.assert(CARDS.every((c) => DOMAINS[c.d] && c.q && c.a), 'malformed card data');
+
+try { navigator.serviceWorker && navigator.serviceWorker.register('sw.js'); } catch (e) {}
 </script>
 </body>
 </html>

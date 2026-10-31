@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="One-page community cheatsheet for the AWS Certified AI Practitioner exam (AIF-C01).">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>AWS AI Practitioner Cheatsheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
 <style>
@@ -129,7 +133,12 @@
   }
   .note { font-size: 11.5px; color: var(--muted); }
   .tablewrap { overflow-x: auto; min-width: 0; }
-  @media (max-width: 480px) { body { font-size: 14px; } .flow { columns: 1; } }
+  @media (max-width: 480px) {
+    body { font-size: 14px; }
+    .flow { columns: 1; }
+    figure { overflow-x: auto; }
+    figure svg { min-width: 480px; }
+  }
 </style>
 <style>body{margin:0}img{max-width:100%}</style>
 </head>
@@ -765,5 +774,6 @@
   <p>Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a></p>
 </footer>
 
+<script>try { navigator.serviceWorker && navigator.serviceWorker.register('sw.js'); } catch (e) {}</script>
 </body>
 </html>
