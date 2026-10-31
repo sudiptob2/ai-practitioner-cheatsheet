@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Flashcards for the AWS Certified AI Practitioner exam (AIF-C01).">
+<title>AIF-C01 Flashcards</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --line: #dbe3ec;
+    --fg: #1c2432;
+    --muted: #5e6b80;
+    --genai: #7c3aed;
+    --ml: #0e7490;
+    --svc: #2563eb;
+    --rai: #047857;
+    --sec: #4f46e5;
+    --exam: #475569;
+    --mono: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+    --sans: 'IBM Plex Sans', -apple-system, Arial, sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 14px 44px;
+  }
+  main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  .ribbon { height: 5px; border-radius: 99px;
+    background: linear-gradient(90deg, var(--exam) 0 16.6%, var(--ml) 0 33.3%, var(--genai) 0 50%, var(--svc) 0 66.6%, var(--rai) 0 83.3%, var(--sec) 0 100%); }
+  h1 { font-size: 22px; margin: 0; }
+  .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .top a { color: var(--svc); font-size: 13px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filters button {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    border: 1.5px solid var(--c, var(--exam)); color: var(--c, var(--exam)); background: var(--panel);
+    padding: 4px 12px; border-radius: 99px; cursor: pointer;
+  }
+  .filters button[aria-pressed="true"] { background: var(--c, var(--exam)); color: #fff; }
+  .card {
+    border: 1px solid var(--line); border-radius: 14px; background: var(--panel);
+    border-top: 4px solid var(--c, var(--exam));
+    box-shadow: 0 2px 8px rgba(28, 36, 50, 0.07);
+    min-height: 240px; padding: 22px 24px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .card .dom { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--c, var(--exam)); }
+  .card .side { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .card .text { font-size: 18px; font-weight: 600; margin: auto 0; }
+  .card.showing-a .text { font-weight: 400; font-size: 16px; }
+  .card .hint { font-size: 12px; color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .row .spacer { flex: 1; }
+  button.act {
+    font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel); color: var(--fg);
+    padding: 8px 16px; border-radius: 10px;
+  }
+  button.act.good { border-color: var(--rai); color: var(--rai); }
+  button.act.again { border-color: var(--sec); color: var(--sec); }
+  button.act:disabled { opacity: 0.45; cursor: default; }
+  .meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .meta button { background: none; border: none; color: var(--svc); cursor: pointer; font-size: 13px; padding: 0; }
+  label.hideknown { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+  footer { font-size: 11.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+  footer a { color: var(--svc); }
+  @media (prefers-reduced-motion: no-preference) { .card .text { transition: opacity 0.15s; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="ribbon" aria-hidden="true"></div>
+  <div class="top">
+    <h1>AIF-C01 Flashcards</h1>
+    <a href="index.html">← back to the cheatsheet</a>
+  </div>
+  <div class="filters" id="filters" role="group" aria-label="Filter by domain"></div>
+  <div class="card" id="card" role="button" tabindex="0" aria-live="polite">
+    <div><span class="dom" id="dom"></span> <span class="side" id="side"></span></div>
+    <div class="text" id="text"></div>
+    <div class="hint" id="hint">Click or press Space to flip</div>
+  </div>
+  <div class="row">
+    <button class="act" id="prev">← Prev</button>
+    <button class="act" id="next">Next →</button>
+    <span class="spacer"></span>
+    <button class="act again" id="again">Again</button>
+    <button class="act good" id="know">Got it ✓</button>
+  </div>
+  <div class="meta">
+    <span id="pos"></span>
+    <span id="progress"></span>
+    <label class="hideknown"><input type="checkbox" id="hideknown"> hide known</label>
+    <button id="shuffle">Shuffle</button>
+    <button id="reset">Reset progress</button>
+  </div>
+  <footer>
+    Keyboard: Space = flip, ← / → = previous / next, K = got it.
+    Progress is stored only in this browser.
+    Built by <a href="https://github.com/sudiptob2">Sudipto Baral</a>; unofficial, not affiliated with AWS.
+  </footer>
+</main>
+<script>
+const DOMAINS = {
+  exam: { name: 'Exam', color: 'var(--exam)' },
+  ml: { name: 'ML', color: 'var(--ml)' },
+  genai: { name: 'GenAI + Bedrock', color: 'var(--genai)' },
+  svc: { name: 'AI services', color: 'var(--svc)' },
+  sm: { name: 'SageMaker', color: 'var(--svc)' },
+  rai: { name: 'Responsible AI', color: 'var(--rai)' },
+  sec: { name: 'Security', color: 'var(--sec)' },
+};
+const CARDS = [
+  { d: 'exam', q: 'AIF-C01 exam format?', a: '65 questions, 90 minutes, passing score 700/1000, ~$100. Unanswered counts as wrong, so never leave blanks.' },
+  { d: 'exam', q: 'The five AIF-C01 domains and weights?', a: 'AI/ML fundamentals 20%, GenAI fundamentals 24%, applications of foundation models 28%, responsible AI 14%, security/compliance/governance 14%.' },
+  { d: 'ml', q: 'Predict a continuous number, like a house price. Which learning type?', a: 'Supervised learning - regression.' },
+  { d: 'ml', q: 'Classify emails as spam or not spam. Which learning type?', a: 'Supervised learning - binary classification (k-NN is the classic algorithm cue).' },
+  { d: 'ml', q: 'Customer segmentation with unlabeled purchase data?', a: 'Unsupervised clustering - K-means.' },
+  { d: 'ml', q: 'Which products are bought together (market basket analysis)?', a: 'Association rule learning - the Apriori algorithm.' },
+  { d: 'ml', q: 'Flag unusual credit card transactions?', a: 'Anomaly detection - Isolation Forest.' },
+  { d: 'ml', q: 'Small labeled set plus a large unlabeled set?', a: 'Semi-supervised learning: the model pseudo-labels the unlabeled data, then retrains.' },
+  { d: 'ml', q: 'How do BERT and GPT get pretrained without human labels?', a: 'Self-supervised learning - the model creates its own pseudo-labels (predict the masked or next token).' },
+  { d: 'ml', q: 'Agent, environment, action, reward, state, policy - what is this?', a: 'Reinforcement learning. The agent maximizes cumulative reward.' },
+  { d: 'ml', q: 'What is RLHF?', a: 'Reinforcement learning from human feedback: humans rank responses, a reward model learns the preference, then RL optimizes the LLM against it.' },
+  { d: 'ml', q: 'False negatives are costly (disease, fraud). Which metric?', a: 'Recall = TP / (TP + FN).' },
+  { d: 'ml', q: 'False positives are costly. Which metric?', a: 'Precision = TP / (TP + FP).' },
+  { d: 'ml', q: 'Best single metric on an imbalanced dataset?', a: 'F1 score - the balance of precision and recall. Accuracy only works on balanced data.' },
+  { d: 'ml', q: 'Compare classifiers across all thresholds?', a: 'AUC-ROC, from 0 to 1; 1 is a perfect model.' },
+  { d: 'ml', q: 'Metrics for regression models?', a: 'MAE, MAPE, RMSE measure error size; R squared measures variance explained (near 1 = good).' },
+  { d: 'ml', q: 'Model is great on training data but bad on new data. Diagnosis and fixes?', a: 'Overfitting (high variance). More data, early stopping, data augmentation, regularization, ensembling.' },
+  { d: 'ml', q: 'Model is bad even on the training data. Diagnosis and fixes?', a: 'Underfitting (high bias). Use a more complex model or add features.' },
+  { d: 'ml', q: 'Learning rate, batch size, epochs, regularization - what are these and when are they set?', a: 'Hyperparameters, set BEFORE training. Tune with grid/random search or SageMaker Automatic Model Tuning.' },
+  { d: 'ml', q: 'Typical train / validation / test split and what each is for?', a: '60-80% train, 10-20% validation (hyperparameter tuning), 10-20% test (final evaluation).' },
+  { d: 'ml', q: 'The problem is deterministic and computable. ML or not?', a: 'Not ML - write regular code. ML only approximates deterministic answers.' },
+  { d: 'ml', q: 'Low-latency inference, offline, on a small device?', a: 'A Small Language Model at the edge. LLM on a server = more power but needs the network.' },
+  { d: 'ml', q: 'What is a GAN used for?', a: 'Generating synthetic data (images, audio) that resembles training data - useful for data augmentation.' },
+  { d: 'ml', q: 'Which network type fits time series and speech?', a: 'RNN (recurrent neural network). SageMaker DeepAR uses it for forecasting.' },
+  { d: 'ml', q: 'Three moves of feature engineering?', a: 'Extraction (derive age from birth date), selection (keep important predictors), transformation (normalize scales).' },
+  { d: 'genai', q: 'Order the FM improvement options from cheapest to priciest.', a: '1 Prompt engineering, 2 RAG, 3 instruction-based fine-tuning, 4 domain-adaptation pre-training. Pick the cheapest that satisfies the scenario.' },
+  { d: 'genai', q: 'FM must use up-to-date company data with no retraining budget?', a: 'RAG via Bedrock Knowledge Bases - external data, no weight changes.' },
+  { d: 'genai', q: 'Which changes model weights: RAG or fine-tuning?', a: 'Fine-tuning. RAG only augments the prompt with retrieved context.' },
+  { d: 'genai', q: 'Vector database options for Bedrock Knowledge Bases?', a: 'OpenSearch (default, kNN search), Aurora PostgreSQL, Neptune Analytics (GraphRAG), S3 Vectors (cheapest).' },
+  { d: 'genai', q: 'Block restricted topics and redact PII in a GenAI app?', a: 'Bedrock Guardrails. The ContentFilteredCount CloudWatch metric shows them working.' },
+  { d: 'genai', q: 'GenAI must perform multi-step tasks calling your APIs?', a: 'Bedrock Agents - action groups defined by an OpenAPI schema plus Lambda, with knowledge bases and chain-of-thought orchestration.' },
+  { d: 'genai', q: 'Bedrock pricing mode that actually saves money? And what is Provisioned Throughput for?', a: 'Batch - up to 50% discount. Provisioned Throughput reserves capacity (required for custom models) and is not a cost saver.' },
+  { d: 'genai', q: 'Do temperature, Top K, Top P affect price or latency?', a: 'No. They only shape output randomness. Latency and cost come from model size/type and token counts.' },
+  { d: 'genai', q: 'The main Bedrock cost driver?', a: 'Input plus output token counts (then model size).' },
+  { d: 'genai', q: 'First factor to check when choosing a foundation model?', a: 'The context window - how many tokens it can consider.' },
+  { d: 'genai', q: 'What are embeddings?', a: 'Numeric vectors for text/images/audio where similar meaning gives similar vectors. They power semantic search and RAG.' },
+  { d: 'genai', q: 'Training data format for supervised fine-tuning on Bedrock?', a: 'Labeled prompt/completion pairs, in the required format, stored in Amazon S3.' },
+  { d: 'genai', q: 'What is distillation?', a: 'A large teacher model transfers knowledge to a smaller student: cheaper and faster with a small accuracy loss.' },
+  { d: 'genai', q: 'Metrics for evaluating generated text?', a: 'ROUGE (summarization), BLEU (translation), BERTScore (semantic similarity), perplexity (next-token prediction, lower is better).' },
+  { d: 'genai', q: '"Think step by step" is which technique?', a: 'Chain-of-thought prompting.' },
+  { d: 'genai', q: 'Giving examples inside the prompt is called?', a: 'Few-shot prompting (one example = one-shot; none = zero-shot).' },
+  { d: 'genai', q: 'Four parts of a well-formed prompt?', a: 'Instructions, context, input data, output indicator. Negative prompting adds what NOT to include.' },
+  { d: 'genai', q: 'What is Amazon Nova?', a: 'The AWS family of foundation models on Bedrock: Premier/Pro/Lite/Micro for understanding, Canvas (image), Reel (video), Sonic (speech).' },
+  { d: 'genai', q: 'Employees ask questions over internal documents and only see what they may access?', a: 'Amazon Quick (successor to Q Business) with IAM Identity Center.' },
+  { d: 'genai', q: 'Experiment with GenAI apps without an AWS account?', a: 'PartyRock - the free Bedrock playground.' },
+  { d: 'genai', q: 'AI coding companion that also answers questions about your AWS account and bill?', a: 'Amazon Q Developer.' },
+  { d: 'svc', q: 'Sentiment, key phrases, and entities from text?', a: 'Amazon Comprehend. Custom Classification for your categories, Custom Entity Recognition for your terms.' },
+  { d: 'svc', q: 'Speech to text, and the two accuracy boosters?', a: 'Amazon Transcribe. Custom Vocabularies for specific words; Custom Language Models for domain context. Also PII redaction and toxicity detection.' },
+  { d: 'svc', q: 'Text to speech, and how to control pronunciation?', a: 'Amazon Polly. Lexicons map text to speech ("AWS" read in full), SSML marks up pronunciation, speech marks enable lip sync.' },
+  { d: 'svc', q: 'Find your company logo in images?', a: 'Rekognition Custom Labels - label a few hundred images, Rekognition builds the custom model.' },
+  { d: 'svc', q: 'Extract text, forms, and tables from scanned PDFs?', a: 'Amazon Textract.' },
+  { d: 'svc', q: 'Natural-language search that answers from your documents?', a: 'Amazon Kendra (incremental learning from user feedback). Kendra searches; Personalize recommends.' },
+  { d: 'svc', q: 'Build a chatbot with intents and slots?', a: 'Amazon Lex; a Lambda function fulfills the intent.' },
+  { d: 'svc', q: 'Real-time product recommendations like Amazon.com?', a: 'Amazon Personalize - recipes like User-Personalization, Similar-Items, Trending-Now, Next-Best-Action.' },
+  { d: 'svc', q: 'Humans review only the low-confidence predictions?', a: 'Amazon Augmented AI (A2I). High-confidence results return directly.' },
+  { d: 'svc', q: 'Detect PHI in clinical text?', a: 'Comprehend Medical - the DetectPHI API. Transcribe Medical handles HIPAA speech to text.' },
+  { d: 'svc', q: 'Generate clinical notes from a patient-clinician conversation?', a: 'AWS HealthScribe.' },
+  { d: 'svc', q: 'Label 10 million images with a human workforce?', a: 'Amazon Mechanical Turk (or SageMaker Ground Truth with Turk, your staff, or vendors).' },
+  { d: 'svc', q: 'AWS chips for cheap training and cheap inference?', a: 'Trainium (Trn1, ~50% cheaper training) and Inferentia (Inf1/Inf2). Also the lowest environmental footprint answer.' },
+  { d: 'sm', q: 'The four SageMaker inference options and when each fits?', a: 'Real-time (instant, up to 25 MB), Serverless (sporadic traffic, cold starts, 4 MB), Asynchronous (up to 1 GB, long jobs, S3 in/out), Batch Transform (whole dataset, S3 in/out).' },
+  { d: 'sm', q: 'Detect bias in data and explain model predictions?', a: 'SageMaker Clarify. It also evaluates foundation models for accuracy and toxicity.' },
+  { d: 'sm', q: 'Alert when a production model starts drifting?', a: 'SageMaker Model Monitor.' },
+  { d: 'sm', q: 'Human data labeling and RLHF inside SageMaker?', a: 'SageMaker Ground Truth.' },
+  { d: 'sm', q: 'Build ML models with no code?', a: 'SageMaker Canvas (AutoML by Autopilot; can use Rekognition/Comprehend/Textract models).' },
+  { d: 'sm', q: 'Hub of pre-trained models deployed into YOUR account?', a: 'SageMaker JumpStart. Contrast: Bedrock is a managed API, no infrastructure in your account.' },
+  { d: 'sm', q: 'CI/CD for machine learning?', a: 'SageMaker Pipelines (steps: Processing, Training, Tuning, AutoML, ClarifyCheck, QualityCheck).' },
+  { d: 'sm', q: 'Document a model for audits: intended use, risk rating, training details?', a: 'SageMaker Model Cards. AWS AI Service Cards are the AWS-published equivalent per service.' },
+  { d: 'sm', q: 'Automatically find the best hyperparameters?', a: 'SageMaker Automatic Model Tuning (AMT).' },
+  { d: 'sm', q: 'Visual data preparation and feature engineering? And where do reusable features live?', a: 'SageMaker Data Wrangler; features are stored and shared in SageMaker Feature Store.' },
+  { d: 'sm', q: 'Run SageMaker jobs with no outbound internet at all?', a: 'Network Isolation mode - the container cannot even reach S3 directly.' },
+  { d: 'rai', q: 'Name the core dimensions of responsible AI.', a: 'Fairness, explainability, privacy and security, transparency, veracity and robustness, governance, safety, controllability.' },
+  { d: 'rai', q: 'A model flags only certain ethnic groups. Bias type and fix?', a: 'Sampling bias - the training data is unrepresentative. Fix with data augmentation for the imbalanced classes (Data Wrangler can rebalance).' },
+  { d: 'rai', q: 'Highly interpretable models vs black boxes?', a: 'Interpretable: linear regression, decision trees (overfit with many branches). Black box: neural networks - Partial Dependence Plots help explain them.' },
+  { d: 'rai', q: 'Three hallucination mitigations?', a: 'Educate users to check outputs, verify against independent sources, mark generated content as unverified.' },
+  { d: 'rai', q: 'Toxicity mitigations for a GenAI app?', a: 'Curate the training data (remove offensive content) and use guardrail models to filter output.' },
+  { d: 'sec', q: 'Malicious data slipped into the TRAINING set?', a: 'Poisoning.' },
+  { d: 'sec', q: 'Malicious instructions embedded in the prompt itself?', a: 'Prompt injection / hijacking. Defend with instructions to ignore unrelated content plus Guardrails.' },
+  { d: 'sec', q: 'The model reveals its own system prompt?', a: 'Prompt leaking. Revealing sensitive training data = exposure.' },
+  { d: 'sec', q: 'Circumventing a model’s safety constraints?', a: 'Jailbreaking.' },
+  { d: 'sec', q: 'Call Bedrock without touching the public internet?', a: 'A VPC endpoint powered by AWS PrivateLink. S3 also has a Gateway Endpoint.' },
+  { d: 'sec', q: 'Bedrock must read KMS-encrypted training data in S3. What does it need?', a: 'An IAM role with BOTH S3 access and KMS decrypt permission.' },
+  { d: 'sec', q: 'Who invoked this Bedrock API call?', a: 'AWS CloudTrail - API history, on by default.' },
+  { d: 'sec', q: 'Find PII sitting in S3 buckets?', a: 'Amazon Macie.' },
+  { d: 'sec', q: 'Security OF the cloud vs IN the cloud?', a: 'AWS secures OF (infrastructure, managed service internals); the customer secures IN (data, access, guardrails, encryption); shared: patching, configuration, training.' },
+  { d: 'sec', q: 'The five scopes of the GenAI Security Scoping Matrix?', a: '1 consumer app (ChatGPT), 2 enterprise app with GenAI (Q Developer), 3 pre-trained models (Bedrock base), 4 fine-tuned models, 5 self-trained from scratch (SageMaker). Ownership increases with the number.' },
+  { d: 'sec', q: 'Continuous audit against GDPR / HIPAA / PCI DSS with evidence folders?', a: 'AWS Audit Manager. AWS Artifact is where you download the compliance reports themselves.' },
+  { d: 'sec', q: 'Vulnerability scanning for EC2, ECR images, and Lambda?', a: 'Amazon Inspector - CVE database with a risk score.' },
+];
+
+const el = (id) => document.getElementById(id);
+let filter = null;          // domain key or null = all
+let hideKnown = false;
+let order = CARDS.map((_, i) => i);
+let pos = 0;
+let showingA = false;
+
+let known = new Set();
+try { known = new Set(JSON.parse(localStorage.getItem('aif-known') || '[]')); } catch (e) {}
+const saveKnown = () => { try { localStorage.setItem('aif-known', JSON.stringify([...known])); } catch (e) {} };
+const cardId = (i) => CARDS[i].d + ':' + CARDS[i].q.slice(0, 40);
+
+function visible() {
+  return order.filter((i) =>
+    (!filter || CARDS[i].d === filter) && (!hideKnown || !known.has(cardId(i))));
+}
+function render() {
+  const v = visible();
+  const card = el('card');
+  if (v.length === 0) {
+    el('dom').textContent = '';
+    el('side').textContent = '';
+    el('text').textContent = hideKnown ? 'All cards in this filter are marked as known. Nice.' : 'No cards here.';
+    el('hint').textContent = '';
+    el('pos').textContent = '0 cards';
+  } else {
+    if (pos >= v.length) pos = 0;
+    const c = CARDS[v[pos]];
+    card.style.setProperty('--c', DOMAINS[c.d].color);
+    card.classList.toggle('showing-a', showingA);
+    el('dom').textContent = DOMAINS[c.d].name;
+    el('side').textContent = showingA ? '· answer' : '· question';
+    el('text').textContent = showingA ? c.a : c.q;
+    el('hint').textContent = showingA ? '' : 'Click or press Space to flip';
+    el('pos').textContent = `card ${pos + 1} / ${v.length}`;
+  }
+  const inScope = order.filter((i) => !filter || CARDS[i].d === filter);
+  const knownCount = inScope.filter((i) => known.has(cardId(i))).length;
+  el('progress').textContent = `${knownCount} / ${inScope.length} known`;
+  el('know').disabled = el('again').disabled = v.length === 0;
+}
+function move(delta) { const v = visible(); if (!v.length) return; pos = (pos + delta + v.length) % v.length; showingA = false; render(); }
+function flip() { showingA = !showingA; render(); }
+function mark(isKnown) {
+  const v = visible(); if (!v.length) return;
+  const id = cardId(v[pos]);
+  if (isKnown) known.add(id); else known.delete(id);
+  saveKnown();
+  if (hideKnown && isKnown) { showingA = false; } else { move(1); return; }
+  render();
+}
+
+// filter chips
+const filters = el('filters');
+const allBtn = document.createElement('button');
+allBtn.textContent = 'All';
+allBtn.style.setProperty('--c', 'var(--fg)');
+allBtn.setAttribute('aria-pressed', 'true');
+filters.appendChild(allBtn);
+allBtn.onclick = () => setFilter(null);
+const domBtns = { all: allBtn };
+for (const [key, d] of Object.entries(DOMAINS)) {
+  const b = document.createElement('button');
+  b.textContent = d.name;
+  b.style.setProperty('--c', d.color);
+  b.setAttribute('aria-pressed', 'false');
+  b.onclick = () => setFilter(key);
+  filters.appendChild(b);
+  domBtns[key] = b;
+}
+function setFilter(key) {
+  filter = key; pos = 0; showingA = false;
+  for (const [k, b] of Object.entries(domBtns)) b.setAttribute('aria-pressed', String(key === null ? k === 'all' : k === key));
+  render();
+}
+
+el('card').onclick = flip;
+el('card').onkeydown = (e) => { if (e.key === 'Enter') flip(); };
+el('next').onclick = () => move(1);
+el('prev').onclick = () => move(-1);
+el('know').onclick = () => mark(true);
+el('again').onclick = () => mark(false);
+el('shuffle').onclick = () => { order.sort(() => Math.random() - 0.5); pos = 0; showingA = false; render(); };
+el('reset').onclick = () => { known.clear(); saveKnown(); render(); };
+el('hideknown').onchange = (e) => { hideKnown = e.target.checked; pos = 0; render(); };
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === ' ') { e.preventDefault(); flip(); }
+  else if (e.key === 'ArrowRight') move(1);
+  else if (e.key === 'ArrowLeft') move(-1);
+  else if (e.key.toLowerCase() === 'k') mark(true);
+});
+render();
+
+// self-check: card data is well formed
+console.assert(CARDS.every((c) => DOMAINS[c.d] && c.q && c.a), 'malformed card data');
+</script>
+</body>
+</html>

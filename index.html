@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="One-page community cheatsheet for the AWS Certified AI Practitioner exam (AIF-C01).">
+<title>AWS AI Practitioner Cheatsheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+  /* Layout: dense multi-column cheat sheet; color-coded boxes per exam domain, masonry via CSS columns */
+  :root {
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --line: #dbe3ec;
+    --fg: #1c2432;
+    --muted: #5e6b80;
+    --genai: #7c3aed;   /* Bedrock / GenAI - violet */
+    --ml: #0e7490;      /* ML fundamentals - cyan */
+    --svc: #2563eb;     /* AI services - blue */
+    --rai: #047857;     /* responsible AI - emerald */
+    --sec: #4f46e5;     /* security - indigo */
+    --exam: #475569;    /* exam meta - slate */
+    --tint: 13%;
+    --mono: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+    --sans: 'IBM Plex Sans', -apple-system, Arial, sans-serif;
+  }
+  /* Deliberately single-theme: always a white sheet, even in a dark viewer */
+  :root { color-scheme: light; }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--sans);
+    font-size: 13px; line-height: 1.35;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 14px 44px;
+  }
+  .ribbon { max-width: 1380px; height: 5px; border-radius: 99px; margin: 0 auto 14px;
+    background: linear-gradient(90deg, var(--exam) 0 16.6%, var(--ml) 0 33.3%, var(--genai) 0 50%, var(--svc) 0 66.6%, var(--rai) 0 83.3%, var(--sec) 0 100%); }
+  header { max-width: 1380px; margin: 0 auto 12px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--svc); margin: 0 0 7px; }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 5px; text-wrap: balance; }
+  .lede { color: var(--muted); font-size: 13px; max-width: 80ch; margin: 0 0 5px; }
+  .byline { font-size: 12px; color: var(--muted); margin: 0; }
+  a { color: var(--svc); }
+  footer { max-width: 1380px; margin: 18px auto 0; padding-top: 10px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--muted); }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+  html { scroll-behavior: smooth; }
+  .chips {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    max-width: 1380px; margin: 0 auto 18px; display: flex; flex-wrap: wrap; gap: 6px; padding-block: 8px;
+  }
+  .chips a {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    text-decoration: none; color: #ffffff; background: var(--c, var(--exam));
+    padding: 4px 12px; border-radius: 99px;
+  }
+  .domain { max-width: 1380px; margin: 0 auto 16px; scroll-margin-top: 84px; }
+  .dh {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--c, var(--exam)); margin: 0 0 8px; padding-bottom: 4px;
+    border-bottom: 2px solid var(--c, var(--exam));
+  }
+  .flow { columns: 4 300px; column-gap: 12px; }
+  .box {
+    break-inside: auto;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    background: var(--panel);
+    border: 1px solid color-mix(in srgb, var(--c, var(--exam)) 32%, var(--panel));
+    border-radius: 10px;
+    margin: 0 0 10px; overflow: hidden; min-width: 0;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--c, var(--exam)) 12%, transparent);
+  }
+  .box h2 {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    margin: 0; padding: 6px 11px 5px; color: #ffffff;
+    background: var(--c, var(--exam));
+    break-after: avoid;
+  }
+  .box .in { padding: 6px 10px 8px; }
+  .box .in > * + * { margin-top: 4px; }
+  tr, figure, .bar { break-inside: avoid; }
+  .box p { margin: 0; }
+  .box ul { margin: 0; padding-left: 15px; display: flex; flex-direction: column; gap: 1px; }
+  .muted { color: var(--muted); }
+  .sm { font-size: 12.5px; }
+  .big { font-size: 14px; font-weight: 700; }
+  .hl {
+    background: color-mix(in srgb, var(--c, var(--exam)) 15%, var(--panel));
+    color: color-mix(in srgb, var(--c, var(--exam)) 70%, var(--fg));
+    font-weight: 700; padding: 0 4px; border-radius: 4px;
+  }
+  .pick td:first-child { color: var(--fg); font-weight: 400; white-space: normal; }
+  .pick td + td { font-weight: 700; color: var(--svc); white-space: nowrap; }
+  .ic { width: 16px; height: 16px; border-radius: 3px; vertical-align: -4px; margin-right: 5px; }
+  .box h2 .ic { width: 14px; height: 14px; border-radius: 3px; vertical-align: -3px; margin-right: 6px; }
+  figure { margin: 0; min-width: 0; }
+  figure svg { max-width: 100%; height: auto; display: block; }
+  figcaption { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .dg text { font-family: var(--sans); font-size: 12.5px; fill: var(--fg); }
+  .dg .lab { font-size: 11px; fill: var(--muted); }
+  .dg line, .dg path.w { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  b { font-weight: 600; }
+  code, .k {
+    font-family: var(--mono); font-size: 11.5px; background: color-mix(in srgb, var(--fg) 7%, transparent);
+    padding: 0 4px; border-radius: 3px; white-space: nowrap;
+  }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { text-align: left; padding: 2px 8px 2px 0; vertical-align: top; border-top: 1px solid color-mix(in srgb, var(--c, var(--exam)) 12%, var(--panel)); }
+  tr:first-child > th, tr:first-child > td { border-top: none; }
+  th { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 600; }
+  td:first-child { font-weight: 700; white-space: nowrap; padding-right: 10px; color: color-mix(in srgb, var(--c, var(--exam)) 72%, var(--fg)); }
+  td.wrap { white-space: normal; }
+  .kv td:first-child { color: var(--c, var(--exam)); }
+  .pair { display: grid; grid-template-columns: auto 1fr; gap: 1.5px 9px; font-size: 12.5px; }
+  .pair b { white-space: nowrap; font-weight: 700; color: color-mix(in srgb, var(--c, var(--exam)) 72%, var(--fg)); }
+  .arrow { color: var(--c, var(--exam)); font-weight: 700; }
+  .bar { display: flex; height: 14px; border-radius: 4px; overflow: hidden; font-size: 0; }
+  .bar span { display: block; height: 100%; }
+  .tag {
+    display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px;
+    padding: 1px 7px; border-radius: 99px; border: 1px solid var(--c, var(--exam)); color: var(--c, var(--exam));
+    white-space: nowrap;
+  }
+  .note { font-size: 11.5px; color: var(--muted); }
+  .tablewrap { overflow-x: auto; min-width: 0; }
+  @media (max-width: 480px) { body { font-size: 14px; } .flow { columns: 1; } }
+</style>
+<style>body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+
+<div class="ribbon" aria-hidden="true"></div>
+<header>
+  <p class="eyebrow">Free community study sheet</p>
+  <h1>AWS AI Practitioner Cheatsheet</h1>
+  <p class="lede">Everything worth memorizing for the AIF-C01 exam on one page: the services, Bedrock, ML concepts, responsible AI, and the traps that repeat.</p>
+  <p class="byline">Built by <a href="https://github.com/sudiptob2">Sudipto Baral</a> · updated October 2026</p>
+</header>
+
+<nav class="chips" aria-label="Sections">
+  <a href="#exam" style="--c:var(--exam)">Exam</a>
+  <a href="#ml" style="--c:var(--ml)">ML</a>
+  <a href="#genai" style="--c:var(--genai)">GenAI + Bedrock</a>
+  <a href="#services" style="--c:var(--svc)">AI services</a>
+  <a href="#sagemaker" style="--c:var(--svc)">SageMaker</a>
+  <a href="#rai" style="--c:var(--rai)">Responsible AI</a>
+  <a href="#security" style="--c:var(--sec)">Security</a>
+  <a href="#answers" style="--c:var(--exam)">Fast answers</a>
+  <a href="flashcards.html" style="--c:var(--fg)">Flashcards →</a>
+</nav>
+
+<section class="domain" id="exam" style="--c:var(--exam)">
+  <h2 class="dh">Exam</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--exam)">
+  <h2>Exam facts</h2>
+  <div class="in">
+    <p class="sm"><b class="hl">65 questions · 90 min · pass 700/1000</b> · ~$100. Types: multiple choice/response, ordering, matching, case study. <b class="hl">Blank = wrong, always answer.</b> <span class="note">(Verify current logistics on the official exam page.)</span></p>
+    <div class="bar" aria-hidden="true">
+      <span style="width:20%;background:var(--ml)"></span>
+      <span style="width:24%;background:var(--genai)"></span>
+      <span style="width:28%;background:var(--svc)"></span>
+      <span style="width:14%;background:var(--rai)"></span>
+      <span style="width:14%;background:var(--sec)"></span>
+    </div>
+    <div class="pair">
+      <b style="color:var(--ml)">20%</b><span>AI and ML fundamentals</span>
+      <b style="color:var(--genai)">24%</b><span>GenAI fundamentals</span>
+      <b style="color:var(--svc)">28%</b><span>Applications of foundation models</span>
+      <b style="color:var(--rai)">14%</b><span>Responsible AI</span>
+      <b style="color:var(--sec)">14%</b><span>Security, compliance, governance</span>
+    </div>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="ml" style="--c:var(--ml)">
+  <h2 class="dh">ML fundamentals</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--ml)">
+  <h2>The nesting</h2>
+  <div class="in">
+    <figure>
+      <svg class="dg" role="img" aria-label="Generative AI sits inside deep learning, which sits inside machine learning, which sits inside AI" viewBox="0 0 320 190">
+        <rect x="4" y="4" width="312" height="182" rx="12" fill="#f3f8fa" stroke="#0e7490" stroke-opacity="0.3"/>
+        <text x="18" y="27" font-weight="700">AI</text>
+        <rect x="40" y="38" width="262" height="134" rx="10" fill="#e7f1f4" stroke="#0e7490" stroke-opacity="0.45"/>
+        <text x="54" y="61" font-weight="700">Machine Learning</text>
+        <rect x="76" y="72" width="212" height="86" rx="8" fill="#daeaef" stroke="#0e7490" stroke-opacity="0.65"/>
+        <text x="90" y="95" font-weight="700">Deep Learning</text>
+        <rect x="112" y="106" width="162" height="38" rx="6" fill="#0e7490"/>
+        <text x="193" y="130" text-anchor="middle" fill="#ffffff" font-weight="700">Generative AI</text>
+      </svg>
+    </figure>
+    <div class="pair">
+      <b>AI</b><span>human-intelligence tasks, incl. rule systems</span>
+      <b>ML</b><span>learns from data, no explicit rules</span>
+      <b>DL</b><span>multi-layer neural nets, needs GPUs + data</span>
+      <b>GenAI</b><span>creates new content (text, image, audio, code)</span>
+    </div>
+    <p class="note">Rule-based expert system (MYCIN) = AI but NOT ML.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--ml)">
+  <h2>Learning types → scenario</h2>
+  <div class="in">
+    <table>
+      <tr><td>Regression</td><td class="wrap">predict a number: house price, temperature</td></tr>
+      <tr><td>Classification</td><td class="wrap">spam (binary), animal (multiclass), genres (multi-label); k-NN</td></tr>
+      <tr><td>Clustering</td><td class="wrap">customer segmentation - K-means, unlabeled</td></tr>
+      <tr><td>Association</td><td class="wrap">market basket - Apriori</td></tr>
+      <tr><td>Anomaly</td><td class="wrap">fraud detection - Isolation Forest</td></tr>
+      <tr><td>Semi-supervised</td><td class="wrap">few labels + pseudo-labeling</td></tr>
+      <tr><td>Self-supervised</td><td class="wrap">model labels itself - how BERT/GPT pretrain</td></tr>
+      <tr><td>Reinforcement</td><td class="wrap">agent, env, action, reward, state, policy</td></tr>
+      <tr><td>RLHF</td><td class="wrap">human feedback builds the reward model</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--ml)">
+  <h2>Metrics picker</h2>
+  <div class="in">
+    <table class="kv">
+      <tr><td>Precision</td><td class="wrap">TP/(TP+FP) - false positives costly</td></tr>
+      <tr><td>Recall</td><td class="wrap">TP/(TP+FN) - false negatives costly (fraud, disease)</td></tr>
+      <tr><td>F1</td><td class="wrap">balance P and R, imbalanced data</td></tr>
+      <tr><td>Accuracy</td><td class="wrap">balanced datasets only</td></tr>
+      <tr><td>AUC-ROC</td><td class="wrap">compare classifiers, 1 = perfect</td></tr>
+      <tr><td>MAE/RMSE</td><td class="wrap">regression error size</td></tr>
+      <tr><td>R²</td><td class="wrap">variance explained, near 1 = good</td></tr>
+      <tr><td>ROUGE</td><td class="wrap">summarization (n-gram recall)</td></tr>
+      <tr><td>BLEU</td><td class="wrap">translation (precision, brevity penalty)</td></tr>
+      <tr><td>BERTScore</td><td class="wrap">semantic similarity via embeddings</td></tr>
+      <tr><td>Perplexity</td><td class="wrap">next-token prediction, lower = better</td></tr>
+    </table>
+    <p class="note">Confusion matrix = classification · MAE/RMSE/R² = regression · ROUGE/BLEU/BERTScore/perplexity = generated text.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--ml)">
+  <h2>Fit · bias · variance</h2>
+  <div class="in">
+    <table>
+      <tr><th>State</th><th>Symptom</th><th>Fix</th></tr>
+      <tr><td>Overfit</td><td class="wrap">high variance; great on train, bad on new</td><td class="wrap">more data, early stop, augmentation, regularization, ensembles</td></tr>
+      <tr><td>Underfit</td><td class="wrap">high bias; bad everywhere</td><td class="wrap">bigger model, more features</td></tr>
+      <tr><td>Balanced</td><td class="wrap">low bias + low variance</td><td class="wrap">the goal</td></tr>
+    </table>
+    <p class="note">Split: train 60-80% · validation 10-20% (tuning) · test 10-20% (final).</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--ml)">
+  <h2>Hyperparameters (set before training)</h2>
+  <div class="in">
+    <div class="pair">
+      <b>Learning rate</b><span>high = fast, may overshoot; low = precise, slow</span>
+      <b>Batch size</b><span>small = stable, slow; large = fast, unstable</span>
+      <b>Epochs</b><span>too few = underfit; too many = overfit</span>
+      <b>Regularization</b><span>increase to cut overfitting</span>
+    </div>
+    <p class="note">Tune with grid/random search or SageMaker AMT. Model parameters are learned; hyperparameters are not.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--ml)">
+  <h2>Inference modes</h2>
+  <div class="in">
+    <div class="pair">
+      <b>Real-time</b><span>speed over accuracy - chatbots</span>
+      <b>Batch</b><span>accuracy over speed - analysis, S3 in/out</span>
+      <b>Edge (SLM)</b><span>on-device: low latency, offline</span>
+      <b>Server (LLM)</b><span>powerful, needs network</span>
+    </div>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--ml)">
+  <h2>Model name-dropping</h2>
+  <div class="in">
+    <div class="pair">
+      <b>GPT</b><span>generate text/code</span>
+      <b>BERT</b><span>reads text both directions</span>
+      <b>RNN</b><span>sequences: time series, speech</span>
+      <b>ResNet/CNN</b><span>images, faces, objects</span>
+      <b>SVM</b><span>classification + regression</span>
+      <b>WaveNet</b><span>speech synthesis</span>
+      <b>GAN</b><span>synthetic data, augmentation</span>
+      <b>XGBoost</b><span>gradient boosting</span>
+      <b>Transformer</b><span>whole-sentence attention, fast training</span>
+      <b>Diffusion</b><span>noise → image (Stable Diffusion)</span>
+    </div>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="genai" style="--c:var(--genai)">
+  <h2 class="dh">GenAI + Bedrock</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--genai)">
+  <h2>GenAI terms</h2>
+  <div class="in">
+    <div class="pair">
+      <b>FM</b><span>pretrained on broad unlabeled data, many tasks</span>
+      <b>Token</b><span>word/subword; in+out tokens drive cost AND latency</span>
+      <b>Context window</b><span>max tokens considered - first thing to check on a model</span>
+      <b>Embeddings</b><span>text → vectors; similar meaning = similar vector; powers search/RAG</span>
+      <b>Multimodal</b><span>mixed inputs/outputs (text+image+audio)</span>
+      <b>Non-deterministic</b><span>same prompt, different outputs (sampling)</span>
+    </div>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--genai)">
+  <h2><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUJlZHJvY2tfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik01MSAzMWExLjAwMSAxLjAwMSAwIDAgMSAwLTIgMS4wMDEgMS4wMDEgMCAwIDEgMCAyTTI2Ljk3NyA1MS44NDhsLTMuMjAzLTEuNzQ2IDMuNzQxLTIuMjQ1LTEuMDMtMS43MTQtNC43NDcgMi44NDhMMTcgNDYuNDA2di01Ljg0bDQuNTE1LTIuNzEtMS4wMy0xLjcxM0wxNiAzOC44MzNsLTQtMi40di0zLjgxNWw1LjQ0Ny0yLjcyMy0uODk0LTEuNzlMMTIgMzAuMzgydi0yLjc2NGw0Ljk1Ni0yLjQ3OEwyMSAyNy41NjZ2Mi44MTZsLTMuNDQ3IDEuNzIzLjg5NCAxLjc5IDMuNTU2LTEuNzc4IDMuNTU0IDEuNzYuODg2LTEuNzkyTDIzIDMwLjM4di0yLjgxNGw0LjUxNS0yLjcxQTEgMSAwIDAgMCAyOCAyNHYtNWgtMnY0LjQzNGwtNCAyLjQtNC0yLjR2LTYuODQ2bDMtMS42NjZWMjFoMnYtNy4xOWwzLjAyNC0xLjY4IDQuOTc4IDIuNDg2LS4wMDEgMjEuODM0LTEwLjUzOCA2LjcwNiAxLjA3NCAxLjY4OCA5LjQ2NC02LjAyMkwzMSA0OS40MzR6TTQ4IDM5YTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtLTggMTBhMS4wMDEgMS4wMDEgMCAwIDEgMC0yIDEuMDAxIDEuMDAxIDAgMCAxIDAgMm0yLTMzYTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtOSAxMWEzIDMgMCAwIDAtMi44MTYgMkgzMy4wMDF2LTRINDJhMSAxIDAgMCAwIDEtMXYtNC4xODRBMyAzIDAgMCAwIDQ1IDE3YzAtMS42NTQtMS4zNDYtMy0zLTNzLTMgMS4zNDYtMyAzYzAgMS4zMDIuODM5IDIuNDAyIDIgMi44MTZWMjNoLTcuOTk5bC4wMDEtOS4wMDJhMSAxIDAgMCAwLS41NTMtLjg5NGwtNi4wMDItM2ExIDEgMCAwIDAtLjkzMi4wMjJsLTkgNUExIDEgMCAwIDAgMTYgMTZ2Ny4zODJsLTUuNDQ3IDIuNzIzYy0uMzM5LjE3LS41NTMuNTE2LS41NTMuODk1djEwYTEgMSAwIDAgMCAuNDg1Ljg1N0wxNSA0MC41NjZWNDdhMSAxIDAgMCAwIC41MjEuODc4bDExIDZhMSAxIDAgMCAwIC45OTQtLjAyMWw1LTNBMSAxIDAgMCAwIDMzIDUwdi03aDZ2Mi4xODRBMyAzIDAgMCAwIDM3IDQ4YzAgMS42NTQgMS4zNDYgMyAzIDNzMy0xLjM0NiAzLTNhMyAzIDAgMCAwLTItMi44MTZWNDJhMSAxIDAgMCAwLTEtMWgtN2wuMDAxLTRoMTAuNTg1bDEuNzE1IDEuNzE1QTIuOTUgMi45NSAwIDAgMCA0NSA0MGMwIDEuNjU0IDEuMzQ2IDMgMyAzczMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zYTIuOTUgMi45NSAwIDAgMC0xLjI4NS4zbC0yLjAwOC0yLjAwN0ExIDEgMCAwIDAgNDQgMzVIMzMuMDAxdi00aDE1LjE4M0EzIDMgMCAwIDAgNTEgMzNjMS42NTQgMCAzLTEuMzQ2IDMtM3MtMS4zNDYtMy0zLTMiLz48L2c+PC9zdmc+">Bedrock core</h2>
+  <div class="in">
+    <p class="sm">Managed GenAI, one API over many FMs (Titan/Nova, Claude, Llama, Stability). Bedrock copies the FM for you; <b class="hl">your data never trains the base model</b>.</p>
+    <div class="pair">
+      <b>Guardrails</b><span>block topics, filter harm, redact PII, cut hallucinations; <code>ContentFilteredCount</code> metric</span>
+      <b>Agents</b><span>multi-step tasks: action groups (OpenAPI + Lambda) + knowledge bases, chain-of-thought</span>
+      <b>Logging</b><span>Model Invocation Logs → CloudWatch/S3</span>
+      <b><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im0yNy4yODkgMjAuMTU1IDMuNzg0LTkuNTJhMS4wMDEgMS4wMDEgMCAwIDEgMS44NiAwbDUuNDA2IDEzLjYzIDguMzY4LTguMzY5IDEuNDE0IDEuNDE0LTkuNDQzIDkuNDQ0YTEgMSAwIDAgMS0xLjYzNy0uMzM4bC01LjAzOS0xMi43MDItMy4xNzMgNy45ODJ6bS01LjU3IDE1LjA0NC04LjAwNi0zLjE4MyAxMi43MDItNS4wMzhhMS4wMDIgMS4wMDIgMCAwIDAgLjMzOC0xLjYzN2wtOS40NDMtOS40NDMtMS40MTQgMS40MTMgOC4zNjcgOC4zNjgtMTMuNjI4IDUuNDA2YTEgMSAwIDAgMCAwIDEuODZsOS41NDQgMy43OTR6bTMxLjY1NC00LjExNi05LjU0Ni0zLjc5NS0xLjU0IDEuNTQgOC4wMDggMy4xODMtMTIuNzAyIDUuMDM4YTEuMDAyIDEuMDAyIDAgMCAwLS4zMzggMS42MzdsOS40NDMgOS40NDQgMS40MTQtMS40MTQtOC4zNjctOC4zNjggMTMuNjI4LTUuNDA2YTEgMSAwIDAgMCAwLTEuODU5bS0xOC4xOSAxMS4yMjMtMy4xOCA3Ljk5OC01LjAzNy0xMi43MDJhMSAxIDAgMCAwLTEuNjM3LS4zMzhsLTkuNDQzIDkuNDQ0IDEuNDE0IDEuNDE0IDguMzY4LTguMzY5IDUuNDA1IDEzLjYyOWExIDEgMCAwIDAgMS44NiAwbDMuNzkxLTkuNTM1eiIvPjwvc3ZnPg==">Nova</b><span>AWS FM family: Premier/Pro/Lite/Micro, Canvas (img), Reel (video), Sonic (speech)</span>
+    </div>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--genai)">
+  <h2>Improve the FM: cost ladder</h2>
+  <div class="in">
+    <p class="big"><span class="arrow">1</span> Prompt engineering <span class="arrow">→</span> <span class="arrow">2</span> RAG <span class="arrow">→</span> <span class="arrow">3</span> Instruction fine-tuning <span class="arrow">→</span> <span class="arrow">4</span> Domain-adaptation pre-training</p>
+    <p class="note">Cheapest first; pick the lowest rung that satisfies the scenario. 1-2 never change weights; 3-4 do and need compute.</p>
+    <div class="pair">
+      <b>Supervised FT</b><span>labeled prompt/completion pairs in S3</span>
+      <b>Reinforcement FT</b><span>reward fn scores outputs: Lambda (objective), judge model (subjective)</span>
+      <b>Distillation</b><span>teacher → smaller student; cheaper, slight accuracy loss</span>
+    </div>
+    <p class="note">Fine-tuned models cost more to run: on-demand per token or Provisioned Throughput (required for custom).</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--genai)">
+  <h2>RAG + vector DBs</h2>
+  <div class="in">
+    <p class="sm">FM cites data outside training. Knowledge Bases chunk docs → embeddings (Titan) → vector DB. Pick for real-time or proprietary data with <b class="hl">no retraining</b>.</p>
+    <figure>
+      <svg class="dg" role="img" aria-label="RAG: documents in S3 are chunked and embedded into a vector database; at query time the top matching chunks are added to the prompt before the Bedrock foundation model answers" viewBox="0 0 600 240">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5e6b80"/></marker></defs>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVNpbXBsZS1TdG9yYWdlLVNlcnZpY2VfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzdhYTExNiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im00Ny43NTkgMzMuOTQ4LjIzNC0xLjgxN2MyLjE3MyAxLjI1NCAyLjg0OSAxLjk5IDMuMDQ0IDIuMjkzLS4zMjQuMDYxLTEuMjA1LjA4NS0zLjI3OC0uNDc2TTMwLjQ5OSAyMWMtMTAuMzc0IDAtMTcuMTE3LTIuNTEyLTE3LjUtNC4zMDR2LS4xODVjLjM1LTEuMTE5IDYuMTQtNC41MSAxNy41LTQuNTEgMTEuMzQgMCAxNy4xMzMgMy4zOCAxNy41IDQuNTA0di4xMTFDNDcuNzI1IDE4LjQ0NiA0MC45NjIgMjEgMzAuNSAyMW0xNS4zMTkgMTIuMzYyYy00Ljc2NS0xLjU2NS0xMC45MDYtNC4zODMtMTMuMjI0LTUuNDc0YTIuMDkgMi4wOSAwIDAgMC0yLjA4Mi0xLjk4MkEyLjA5NyAyLjA5NyAwIDAgMCAyOC40MTggMjhjMCAxLjE1NC45NCAyLjA5NCAyLjA5NCAyLjA5NC40NTcgMCAuODc3LS4xNTIgMS4yMi0uNCAyLjQgMS4xMjggOC44ODcgNC4xMDQgMTMuODI2IDUuNjg2bC0xLjcyMSAxMy4zNDRDNDMuNTgzIDUwLjM1MiAzOC45MTkgNTIgMzAuNDk3IDUyYy04LjQyNSAwLTEzLjA5Mi0xLjY0OC0xMy4zNDItMy4yNDlsLTMuNzItMjguOTM3QzE2Ljk0NSAyMS45MTUgMjMuNzQ5IDIzIDMwLjUgMjNjNi43NSAwIDEzLjU1NC0xLjA4NSAxNy4wNjUtMy4xODV6TTUwIDE2LjVjMC0zLjA2OS04LjM0LTYuNS0xOS41LTYuNVMxMSAxMy40MzEgMTEgMTYuNXYuNTQzbDQuMTc0IDMxLjk5QzE1Ljg3NCA1My41MTYgMjYuMTIzIDU0IDMwLjQ5NyA1NGM0LjM3MiAwIDE0LjYxNi0uNDg0IDE1LjMyLTQuOTkzbDEuNjg0LTEzLjA2YzEuMjc3LjMzMiAyLjMxLjUxIDMuMTE1LjUwOC45OSAwIDEuNjU3LS4yNTIgMi4wOC0uNzU4LjM1LS40MTYuNDg5LS45NC4zODktMS40NzYtLjIyOC0xLjIyLTEuNjgyLTIuNTA5LTQuNzE1LTQuMTc3bC0uMS0uMDU1TDUwIDE3LjA0NHoiLz48L2c+PC9zdmc+" x="16" y="18" width="46" height="46"/>
+        <text x="39" y="82" text-anchor="middle" class="lab">docs in S3</text>
+        <line x1="70" y1="41" x2="206" y2="41" marker-end="url(#ar)"/>
+        <text x="139" y="30" text-anchor="middle" class="lab">chunk + embed (Titan)</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im0yNy4yODkgMjAuMTU1IDMuNzg0LTkuNTJhMS4wMDEgMS4wMDEgMCAwIDEgMS44NiAwbDUuNDA2IDEzLjYzIDguMzY4LTguMzY5IDEuNDE0IDEuNDE0LTkuNDQzIDkuNDQ0YTEgMSAwIDAgMS0xLjYzNy0uMzM4bC01LjAzOS0xMi43MDItMy4xNzMgNy45ODJ6bS01LjU3IDE1LjA0NC04LjAwNi0zLjE4MyAxMi43MDItNS4wMzhhMS4wMDIgMS4wMDIgMCAwIDAgLjMzOC0xLjYzN2wtOS40NDMtOS40NDMtMS40MTQgMS40MTMgOC4zNjcgOC4zNjgtMTMuNjI4IDUuNDA2YTEgMSAwIDAgMCAwIDEuODZsOS41NDQgMy43OTR6bTMxLjY1NC00LjExNi05LjU0Ni0zLjc5NS0xLjU0IDEuNTQgOC4wMDggMy4xODMtMTIuNzAyIDUuMDM4YTEuMDAyIDEuMDAyIDAgMCAwLS4zMzggMS42MzdsOS40NDMgOS40NDQgMS40MTQtMS40MTQtOC4zNjctOC4zNjggMTMuNjI4LTUuNDA2YTEgMSAwIDAgMCAwLTEuODU5bS0xOC4xOSAxMS4yMjMtMy4xOCA3Ljk5OC01LjAzNy0xMi43MDJhMSAxIDAgMCAwLTEuNjM3LS4zMzhsLTkuNDQzIDkuNDQ0IDEuNDE0IDEuNDE0IDguMzY4LTguMzY5IDUuNDA1IDEzLjYyOWExIDEgMCAwIDAgMS44NiAwbDMuNzkxLTkuNTM1eiIvPjwvc3ZnPg==" x="212" y="18" width="46" height="46"/>
+        <text x="235" y="82" text-anchor="middle" class="lab">embedding model</text>
+        <line x1="266" y1="41" x2="402" y2="41" marker-end="url(#ar)"/>
+        <text x="335" y="30" text-anchor="middle" class="lab">vectors</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLU9wZW5TZWFyY2gtU2VydmljZV80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjOGM0ZmZmIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTM1IDQxYy0yLjc1NyAwLTUtMi4yNDMtNS01czIuMjQzLTUgNS01IDUgMi4yNDMgNSA1LTIuMjQzIDUtNSA1bTAtMTJjLTMuODU5IDAtNyAzLjE0LTcgN3MzLjE0MSA3IDcgNyA3LTMuMTQgNy03LTMuMTQxLTctNy03bTE0LjcxIDE5LjkxOWExLjE0IDEuMTQgMCAwIDEtMS42MDQuMDg1bC01LjU2My01LjAxOWExMSAxMSAwIDAgMCAxLjQ4MS0xLjcxNGw1LjYwMSA1LjA0NWExLjE0IDEuMTQgMCAwIDEgLjA4NSAxLjYwM00yNiAzNmMwLTQuOTYyIDQuMDM3LTkgOS05czkgNC4wMzggOSA5LTQuMDM3IDktOSA5LTktNC4wMzgtOS05bTE5LjAzMyA0LjQ4OEM0NS42NDkgMzkuMTE2IDQ2IDM3LjYgNDYgMzZjMC02LjA2NS00LjkzNS0xMS0xMS0xMXMtMTEgNC45MzUtMTEgMTEgNC45MzUgMTEgMTEgMTFjMi4xOTEgMCA0LjIzLS42NTEgNS45NDctMS43Nmw1LjgyMiA1LjI1MWEzLjEzIDMuMTMgMCAwIDAgMi4wOTQuODAxYy44NTkgMCAxLjcxNC0uMzQ5IDIuMzMzLTEuMDMzYTMuMTQ1IDMuMTQ1IDAgMCAwLS4yMzEtNC40Mjd6TTUzIDE3djI2aC0yVjE4aC01djhoLTJ2LTlhMSAxIDAgMCAxIDEtMWg3YTEgMSAwIDAgMSAxIDFNNDAgNTBoMnYzYTEgMSAwIDAgMS0xIDFoLTdhMSAxIDAgMCAxLTEtMXYtNGgydjNoNXptLTUtMjhoLTJWMTJhMSAxIDAgMCAxIDEtMWg3YTEgMSAwIDAgMSAxIDF2MTFoLTJWMTNoLTV6bS02IDI2aDJ2NWExIDEgMCAwIDEtMSAxaC03YTEgMSAwIDAgMS0xLTFWNDNoMnY5aDV6bS01LTIwaC0ydi05YTEgMSAwIDAgMSAxLTFoN2ExIDEgMCAwIDEgMSAxdjRoLTJ2LTNoLTV6TTEzIDUyaDVWMjZoLTV6bTYtMjhoLTdhMSAxIDAgMCAwLTEgMXYyOGExIDEgMCAwIDAgMSAxaDdhMSAxIDAgMCAwIDEtMVYyNWExIDEgMCAwIDAtMS0xIi8+PC9nPjwvc3ZnPg==" x="408" y="18" width="46" height="46"/>
+        <text x="431" y="82" text-anchor="middle" class="lab">vector DB</text>
+        <path class="w" d="M431 92 V112 H235 V144" marker-end="url(#ar)"/>
+        <text x="340" y="106" text-anchor="middle" class="lab">top-k chunks</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHRpdGxlPkljb24tUmVzb3VyY2UvR2VuZXJhbC1SZXNvdXJjZS9SZXNfVXNlcl80OF9MaWdodDwvdGl0bGU+PHBhdGggZmlsbD0iIzI0MmYzZSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNi4wMjUgNDRjLjQ5OS05LjkxNSA4LjM3LTE3LjgyMiAxNy45NzUtMTcuODIyIDMuMjQ4IDAgNi40My45MTQgOS4yMDUgMi42NDQgNS4xNDkgMy4yMTEgOC40NDggOC45NjEgOC43NjkgMTUuMTc4em04LjE2Ny0zMC4xMjJjMC01LjQ0NiA0LjQtOS44NzggOS44MDktOS44NzggNS40MDcgMCA5LjgwNiA0LjQzMiA5LjgwNiA5Ljg3OCAwIDUuNDQ3LTQuMzk5IDkuODc5LTkuODA2IDkuODc5LTUuNDA5IDAtOS44MDktNC40MzItOS44MDktOS44NzltMjAuMDcxIDEzLjI0N2ExOS40IDE5LjQgMCAwIDAtNS41NjUtMi4zNTQgMTEuODkgMTEuODkgMCAwIDAgNy4xMDktMTAuODkzQzM1LjgwNyA3LjMyOSAzMC41MSAyIDI0LjAwMSAyYy02LjUxMiAwLTExLjgwOSA1LjMyOS0xMS44MDkgMTEuODc4IDAgNC44NzcgMi45MzggOS4wNzIgNy4xMjUgMTAuOUMxMC41NDUgMjYuOTgxIDQgMzUuMiA0IDQ1YTEgMSAwIDAgMCAxIDFoMzhhMSAxIDAgMCAwIDEtMWMwLTcuMjgxLTMuNzMxLTE0LjEzLTkuNzM3LTE3Ljg3NSIvPjwvc3ZnPg==" x="16" y="152" width="46" height="46"/>
+        <text x="39" y="216" text-anchor="middle" class="lab">user</text>
+        <line x1="70" y1="175" x2="206" y2="175" marker-end="url(#ar)"/>
+        <text x="139" y="166" text-anchor="middle" class="lab">prompt</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUJlZHJvY2tfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik01MSAzMWExLjAwMSAxLjAwMSAwIDAgMSAwLTIgMS4wMDEgMS4wMDEgMCAwIDEgMCAyTTI2Ljk3NyA1MS44NDhsLTMuMjAzLTEuNzQ2IDMuNzQxLTIuMjQ1LTEuMDMtMS43MTQtNC43NDcgMi44NDhMMTcgNDYuNDA2di01Ljg0bDQuNTE1LTIuNzEtMS4wMy0xLjcxM0wxNiAzOC44MzNsLTQtMi40di0zLjgxNWw1LjQ0Ny0yLjcyMy0uODk0LTEuNzlMMTIgMzAuMzgydi0yLjc2NGw0Ljk1Ni0yLjQ3OEwyMSAyNy41NjZ2Mi44MTZsLTMuNDQ3IDEuNzIzLjg5NCAxLjc5IDMuNTU2LTEuNzc4IDMuNTU0IDEuNzYuODg2LTEuNzkyTDIzIDMwLjM4di0yLjgxNGw0LjUxNS0yLjcxQTEgMSAwIDAgMCAyOCAyNHYtNWgtMnY0LjQzNGwtNCAyLjQtNC0yLjR2LTYuODQ2bDMtMS42NjZWMjFoMnYtNy4xOWwzLjAyNC0xLjY4IDQuOTc4IDIuNDg2LS4wMDEgMjEuODM0LTEwLjUzOCA2LjcwNiAxLjA3NCAxLjY4OCA5LjQ2NC02LjAyMkwzMSA0OS40MzR6TTQ4IDM5YTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtLTggMTBhMS4wMDEgMS4wMDEgMCAwIDEgMC0yIDEuMDAxIDEuMDAxIDAgMCAxIDAgMm0yLTMzYTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtOSAxMWEzIDMgMCAwIDAtMi44MTYgMkgzMy4wMDF2LTRINDJhMSAxIDAgMCAwIDEtMXYtNC4xODRBMyAzIDAgMCAwIDQ1IDE3YzAtMS42NTQtMS4zNDYtMy0zLTNzLTMgMS4zNDYtMyAzYzAgMS4zMDIuODM5IDIuNDAyIDIgMi44MTZWMjNoLTcuOTk5bC4wMDEtOS4wMDJhMSAxIDAgMCAwLS41NTMtLjg5NGwtNi4wMDItM2ExIDEgMCAwIDAtLjkzMi4wMjJsLTkgNUExIDEgMCAwIDAgMTYgMTZ2Ny4zODJsLTUuNDQ3IDIuNzIzYy0uMzM5LjE3LS41NTMuNTE2LS41NTMuODk1djEwYTEgMSAwIDAgMCAuNDg1Ljg1N0wxNSA0MC41NjZWNDdhMSAxIDAgMCAwIC41MjEuODc4bDExIDZhMSAxIDAgMCAwIC45OTQtLjAyMWw1LTNBMSAxIDAgMCAwIDMzIDUwdi03aDZ2Mi4xODRBMyAzIDAgMCAwIDM3IDQ4YzAgMS42NTQgMS4zNDYgMyAzIDNzMy0xLjM0NiAzLTNhMyAzIDAgMCAwLTItMi44MTZWNDJhMSAxIDAgMCAwLTEtMWgtN2wuMDAxLTRoMTAuNTg1bDEuNzE1IDEuNzE1QTIuOTUgMi45NSAwIDAgMCA0NSA0MGMwIDEuNjU0IDEuMzQ2IDMgMyAzczMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zYTIuOTUgMi45NSAwIDAgMC0xLjI4NS4zbC0yLjAwOC0yLjAwN0ExIDEgMCAwIDAgNDQgMzVIMzMuMDAxdi00aDE1LjE4M0EzIDMgMCAwIDAgNTEgMzNjMS42NTQgMCAzLTEuMzQ2IDMtM3MtMS4zNDYtMy0zLTMiLz48L2c+PC9zdmc+" x="212" y="152" width="46" height="46"/>
+        <text x="235" y="216" text-anchor="middle" class="lab">Bedrock FM</text>
+        <line x1="266" y1="175" x2="402" y2="175" marker-end="url(#ar)"/>
+        <text x="335" y="166" text-anchor="middle" class="lab">grounded answer</text>
+      </svg>
+      <figcaption>Ingestion (top) runs once per document; the query path (bottom) augments every prompt with retrieved chunks.</figcaption>
+    </figure>
+    <table class="kv">
+      <tr><td>OpenSearch</td><td class="wrap">default; kNN similarity search at scale</td></tr>
+      <tr><td>Aurora PostgreSQL</td><td class="wrap">relational option</td></tr>
+      <tr><td>Neptune Analytics</td><td class="wrap">GraphRAG</td></tr>
+      <tr><td>S3 Vectors</td><td class="wrap">cheapest, durable, sub-second</td></tr>
+    </table>
+    <p class="note">Sources: S3, Confluence, SharePoint, Salesforce, web.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--genai)">
+  <h2>Bedrock pricing</h2>
+  <div class="in">
+    <div class="pair">
+      <b>On-Demand</b><span>per token, unpredictable loads</span>
+      <b>Batch</b><span>up to 50% discount, output to S3</span>
+      <b>Provisioned</b><span>reserved capacity/month - NOT a cost saver, required for custom models</span>
+    </div>
+    <p class="note">Cost drivers: token counts + model size. Temperature / Top K / Top P <b class="hl">change NOTHING about price or latency</b>. Latency = model size/type + token counts.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--genai)">
+  <h2>Prompting</h2>
+  <div class="in">
+    <p class="sm">Good prompt = <b>Instructions · Context · Input data · Output indicator</b>. Negative prompting = say what NOT to include.</p>
+    <div class="pair">
+      <b>Zero-shot</b><span>no examples</span>
+      <b>Few-shot</b><span>examples in prompt (one = one-shot)</span>
+      <b>Chain of thought</b><span>"think step by step"</span>
+      <b>Templates</b><span>placeholders; used by Agents</span>
+    </div>
+    <table>
+      <tr><th>Param</th><th>Low</th><th>High</th></tr>
+      <tr><td>Temperature</td><td class="wrap">conservative, repetitive</td><td class="wrap">creative, unpredictable</td></tr>
+      <tr><td>Top P</td><td class="wrap">likeliest words only</td><td class="wrap">broad word pool</td></tr>
+      <tr><td>Top K</td><td class="wrap">fewer candidates</td><td class="wrap">more candidates</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--genai)">
+  <h2><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVFfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zMy45MzUgMzEuMzU1djIuMzM4bC0xLjk2NyAxLjExMkwzMCAzMy42OTN2LTIuMzM4bDEuOTY4LTEuMTk3em0tLjk2MyAxOS45NDhhMS45OSAxLjk5IDAgMCAxLTEuOTQzIDBMMTYuMDMgNDIuOTdBMiAyIDAgMCAxIDE1IDQxLjIyMlYyMy42N2MwLS42OS4zNjgtMS4zNDYuOTU3LTEuNzA2bDE1LTkuMTY3QTIgMiAwIDAgMSAzMiAxMi41MDFhMiAyIDAgMCAxIDEuMDQzLjI5NWwxNSA5LjE2NmMuNTkuMzYxLjk1NyAxLjAxNi45NTcgMS43MDd2MTcuNTUybC0xMy4wNjUtNy44NHYtMi41ODhhMSAxIDAgMCAwLS40OC0uODU0bC0yLjk2Ny0xLjgwNmExIDEgMCAwIDAtMS4wMzkgMGwtMi45NjggMS44MDZhMSAxIDAgMCAwLS40ODEuODU0djMuNDgzYzAgLjM2MS4xOTUuNjk0LjUwOC44NzFsMi45NjggMS42NzdhMSAxIDAgMCAwIC45ODQgMGwyLjc0Mi0xLjU1IDEyLjc5NSA3LjY3N3EtLjAxMi4wMS0uMDI1LjAyem0xNi4xMTQtMzEuMDQ3LTE1LTkuMTY2YTMuOTggMy45OCAwIDAgMC00LjE3MiAwbC0xNSA5LjE2NkE0LjAzIDQuMDMgMCAwIDAgMTMgMjMuNjd2MTcuNTUzYzAgMS40NTEuNzg5IDIuNzkxIDIuMDU4IDMuNDk2bDE1IDguMzMzYTQgNCAwIDAgMCAxLjk0Mi41MDdjLjY2NyAwIDEuMzM0LS4xNjkgMS45NDMtLjUwN2wxNS4wMDEtOC4zMzNBNCA0IDAgMCAwIDUxIDQxLjIyMlYyMy42N2E0LjAzIDQuMDMgMCAwIDAtMS45MTQtMy40MTMiLz48L2c+PC9zdmc+">Amazon Q family</h2>
+  <div class="in">
+    <table class="kv">
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGcgY2xpcC1wYXRoPSJ1cmwoI3N2Zy0zYjdjNThmNy1hM2Y1LTQzMWEtYjRhZC03YjVmYjdmZmY1NWItYSkiPjxwYXRoIGZpbGw9IiNkZDM0NGMiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJtNDguOTk4IDE5Ljg5LTE0Ljk5Ny04LjY1NmE0LjAyIDQuMDIgMCAwIDAtNC4wMDIgMEwxNS4wMDIgMTkuODlBNC4wMSA0LjAxIDAgMCAwIDEzIDIzLjM1N3YxNy4zMWMwIDEuNDI1Ljc2OCAyLjc1MyAyLjAwMiAzLjQ2NmwxNC45OTcgOC42NTZhNC4wMDYgNC4wMDYgMCAwIDAgNC4wMDIgMGwxNC45OTctOC42NTZBNC4wMiA0LjAyIDAgMCAwIDUxIDQwLjY2N3YtMTcuMzFhNC4wMSA0LjAxIDAgMCAwLTIuMDAyLTMuNDY3bS0zMi45OTYgMS43MzIgMTQuOTk3LTguNjU2YTIgMiAwIDAgMSAyLjAwMiAwbDE0Ljk5NyA4LjY1NkEyLjAxIDIuMDEgMCAwIDEgNDkgMjMuMzU3djIuOTlsLTE2LjAzMSA5di04LjM4YTEgMSAwIDAgMC0xLjQ5LS44NzFMMTUgMzUuMzQ3di0xMS45OWMwLS43MTQuMzg0LTEuMzc4IDEuMDAyLTEuNzM1bTMxLjk5NiAyMC43NzktMTQuOTk3IDguNjU2YTIuMDEgMi4wMSAwIDAgMS0yLjAwMiAwTDE2LjAwMiA0Mi40QTIuMDEgMi4wMSAwIDAgMSAxNSA0MC42NjZ2LTMuMDI1bDE1Ljk2OS04Ljk2NXY4LjM4YTEgMSAwIDAgMCAxLjQ4OS44NzFMNDkgMjguNjQxdjEyLjAyNmMwIC43MTMtLjM4NCAxLjM3Ny0xLjAwMiAxLjczNCIvPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9InN2Zy0zYjdjNThmNy1hM2Y1LTQzMWEtYjRhZC03YjVmYjdmZmY1NWItYSI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMGg2NHY2NEgweiIvPjwvY2xpcFBhdGg+PC9kZWZzPjwvc3ZnPg==">Quick</td><td class="wrap">(ex Q Business) employee assistant over company data; IAM Identity Center = users only see docs they can access</td></tr>
+      <tr><td>Quick Index</td><td class="wrap">managed RAG: S3, SharePoint, Drive, Confluence</td></tr>
+      <tr><td>Quick Sight</td><td class="wrap">BI dashboards, natural-language questions</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVFfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zMy45MzUgMzEuMzU1djIuMzM4bC0xLjk2NyAxLjExMkwzMCAzMy42OTN2LTIuMzM4bDEuOTY4LTEuMTk3em0tLjk2MyAxOS45NDhhMS45OSAxLjk5IDAgMCAxLTEuOTQzIDBMMTYuMDMgNDIuOTdBMiAyIDAgMCAxIDE1IDQxLjIyMlYyMy42N2MwLS42OS4zNjgtMS4zNDYuOTU3LTEuNzA2bDE1LTkuMTY3QTIgMiAwIDAgMSAzMiAxMi41MDFhMiAyIDAgMCAxIDEuMDQzLjI5NWwxNSA5LjE2NmMuNTkuMzYxLjk1NyAxLjAxNi45NTcgMS43MDd2MTcuNTUybC0xMy4wNjUtNy44NHYtMi41ODhhMSAxIDAgMCAwLS40OC0uODU0bC0yLjk2Ny0xLjgwNmExIDEgMCAwIDAtMS4wMzkgMGwtMi45NjggMS44MDZhMSAxIDAgMCAwLS40ODEuODU0djMuNDgzYzAgLjM2MS4xOTUuNjk0LjUwOC44NzFsMi45NjggMS42NzdhMSAxIDAgMCAwIC45ODQgMGwyLjc0Mi0xLjU1IDEyLjc5NSA3LjY3N3EtLjAxMi4wMS0uMDI1LjAyem0xNi4xMTQtMzEuMDQ3LTE1LTkuMTY2YTMuOTggMy45OCAwIDAgMC00LjE3MiAwbC0xNSA5LjE2NkE0LjAzIDQuMDMgMCAwIDAgMTMgMjMuNjd2MTcuNTUzYzAgMS40NTEuNzg5IDIuNzkxIDIuMDU4IDMuNDk2bDE1IDguMzMzYTQgNCAwIDAgMCAxLjk0Mi41MDdjLjY2NyAwIDEuMzM0LS4xNjkgMS45NDMtLjUwN2wxNS4wMDEtOC4zMzNBNCA0IDAgMCAwIDUxIDQxLjIyMlYyMy42N2E0LjAzIDQuMDMgMCAwIDAtMS45MTQtMy40MTMiLz48L2c+PC9zdmc+">Q Developer</td><td class="wrap">code companion + queries YOUR AWS account, CLI suggestions, security scans</td></tr>
+      <tr><td>PartyRock</td><td class="wrap">free Bedrock playground, no AWS account</td></tr>
+    </table>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="services" style="--c:var(--svc)">
+  <h2 class="dh">AWS AI services</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--svc)">
+  <h2>AI services: one-liners</h2>
+  <div class="in">
+    <table class="kv">
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUNvbXByZWhlbmRfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00MyA1NGg2di0xLjkzMWgtNnpNMTUgNDIuMDUyaDEyVjQwLjA1SDE1em0xMy01LjAwOGg2di0yLjAwM2gtNnptLTEzIDBoMTF2LTIuMDAzSDE1em0wLTE1LjAyNGgxMHYtMi4wMDRIMTV6bTM0LjExNCAyMi4zMTdjLS40MzQuMzAzLS43ODguNTktMS4wNTIgMS4zMDFxLS4wNjIuMTY4LS4wNjIuMzQ5djMuMDA1aC0xdi02LjAxaDJ2LTEuOTMxaC02djEuOTMxaDJ2Ni4wMWgtMXYtMy4wMDVxMC0uMTgxLS4wNjItLjM0OWMtLjI2NC0uNzEtLjYxOC0uOTk4LTEuMDUzLTEuMy0yLjE0NC0xLjQ5LTMuMjE1LTQuMDM4LTIuNzk0LTYuNjUzLjQ2Ni0yLjkwMyAyLjkyMy01LjI0MSA1Ljg1LTUuNTc3aC4xMThjMi45MjcuMzM2IDUuMzg0IDIuNjc0IDUuODUgNS41NzcuNDIgMi42MTUtLjY1IDUuMTY0LTIuNzk1IDYuNjUybTQuNzctNi45N2MtLjYxLTMuNzk2LTMuODMzLTYuODQ4LTcuNjY1LTcuMjU2YTEgMSAwIDAgMC0uMTA2LS4wMDZoLS4yMjZhMSAxIDAgMCAwLS4xMDYuMDA2Yy0zLjgzMi40MDgtNy4wNTUgMy40Ni03LjY2NSA3LjI1Ni0uNTQ0IDMuMzgzLjg0NyA2LjY4NSAzLjYyOSA4LjYxNy4xNTguMTEuMjE3LjE1LjI1NS4yMDh2My44MDFhMSAxIDAgMCAwIDEgMS4wMDJoNmExIDEgMCAwIDAgMS0xLjAwMnYtMy44Yy4wMzgtLjA1OS4wOTctLjEuMjU0LS4yMSAyLjc4My0xLjkzMSA0LjE3NC01LjIzMyAzLjYzLTguNjE2TTE1IDMyLjAzN2gxOXYtMi4wMDRIMTV6bTctNS4wMWgxMnYtMi4wMDJIMjJ6bS03IDBoNXYtMi4wMDJoLTV6TTI5IDEzLjI1bDYuMzk1IDUuNzY1SDI5em05IDM2LjgxNkgxMlYxMi4wMDdsMTUtLjAwNHY4LjAxM2ExIDEgMCAwIDAgMSAxLjAwMmg5djEwLjAxNmgyVjIwLjAxNmgtLjAwOGExIDEgMCAwIDAtLjMyMy0uNzQ0bC0xMC05LjAxNWExIDEgMCAwIDAtLjY3LS4yNDdWMTBMMTEgMTAuMDA0YTEgMSAwIDAgMC0xIDEuMDAydjQwLjA2MWExIDEgMCAwIDAgMSAxLjAwMmgyOGExIDEgMCAwIDAgMS0xLjAwMnYtNC4wMDZoLTJ6Ii8+PC9nPjwvc3ZnPg==">Comprehend</td><td class="wrap">NLP: sentiment, entities, key phrases; Custom Classification / Custom Entity Recognition</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVRyYW5zbGF0ZV80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTM4IDEyaC00di0yaDRjMi45OSAwIDUgMi4wMDkgNSA1djQuMTQ5bDIuMjE5LTIuNzc0IDEuNTYyIDEuMjUtNCA1YTEgMSAwIDAgMS0xLjU2MiAwbC00LTUgMS41NjItMS4yNUw0MSAxOS4xNDlWMTVjMC0xLjg3OC0xLjEyMS0zLTMtM00yNiA1MmgzdjJoLTNjLTIuOTkgMC01LTIuMDA5LTUtNXYtNC4xNDlsLTIuMjE5IDIuNzc0LTEuNTYyLTEuMjUgNC01Yy4zODEtLjQ3NCAxLjE4MS0uNDc0IDEuNTYyIDBsNCA1LTEuNTYyIDEuMjVMMjMgNDQuODUxVjQ5YzAgMS44NzggMS4xMjEgMyAzIDNtMTcuMjMyLTEyLjk5OWMtLjU1NiAxLjQ0Mi0xLjI4OSAyLjY0NS0yLjIyNyAzLjY1OC0uOTY5LTEuMDIzLTEuNzQ0LTIuMjUtMi4zMTItMy42NTh6bS0xLjQ0My0yLjgzMWEuNTQuNTQgMCAwIDAgLjI0LS4zODIuMzg0LjM4NCAwIDAgMC0uMzU5LS40NDJsLTEuMDktLjA3NGEuNC40IDAgMCAwLS4yOTEuMTA0LjQuNCAwIDAgMC0uMTIzLjI4NHYxLjc1NWgtNC43NDNhLjM5LjM5IDAgMCAwLS4zODkuMzg5di44MDhjMCAuMjE1LjE3NC4zODkuMzg5LjM4OWgxLjUzMWMuNjkyIDEuODc2IDEuNjM0IDMuNDc5IDIuODA4IDQuNzc0LTEuMjIuOTI5LTIuNzE1IDEuNjM5LTQuNTU2IDIuMTY3YS4zODcuMzg3IDAgMCAwLS4xOTUuNjE5Yy4xNDYuMTgxLjM1NS40OTIuNDE5LjY0OWEuMzkuMzkgMCAwIDAgLjQ3NC4yMjVjMi4wNDMtLjYyNSAzLjctMS40NTMgNS4wNDktMi41MjMgMS40MzMgMS4xOSAzLjExMyAyLjAyMiA1LjEyNiAyLjU0YS4zOS4zOSAwIDAgMCAuNDQyLS4xOTZjLjEyNC0uMjM3LjM2Mi0uNTcuNTE4LS43MjdhLjM4Ny4zODcgMCAwIDAtLjE4OC0uNjU0Yy0xLjc3NC0uNDAzLTMuMzMzLTEuMTE2LTQuNjQzLTIuMTIgMS4xMzQtMS4yMjIgMi4wMTMtMi42OTkgMi42NzUtNC40OTdhLjU3LjU3IDAgMCAwIC4zNDUtLjI1N2gxLjM4OWEuMzkuMzkgMCAwIDAgLjM4OS0uMzg5di0uODA4YS4zOS4zOSAwIDAgMC0uMzg5LS4zODloLTQuODI4em0tMjEuMzUyLTcuNzM0IDIuMDI4LTUuOTQ3IDIuMDQ3IDUuOTQ3em0xLjEwMi03LjU1NkwxNy4wNjEgMzNoMS44MzZsMS4wODUtMy4yMThoNC45ODVMMjYuMDg1IDMzaDEuODU0bC00LjQ3Ni0xMi4xMnpNMTQgMzhoMTV2MkgxM2ExIDEgMCAwIDEtMS0xdi02aDJ6bTM2IDE0SDMzVjI2aDEwdjZhMSAxIDAgMCAwIDEgMWg2em0tNS0yNC41OTJMNDguNTg4IDMxSDQ1em02LjcwOCAzLjg4NS03LTcuMDA4YTEgMSAwIDAgMC0uNzA4LS4yODRWMjRIMzJhMSAxIDAgMCAwLTEgMXYyOGExIDEgMCAwIDAgMSAxaDE5YTEgMSAwIDAgMCAxLTFWMzJjMC0uMjYtLjEwMi0uNTE2LS4yOTItLjcwN00yNyAxMy43MDMgMjkuODI2IDE3SDI3em0tMTMtMS43TDI1IDEydjZhMSAxIDAgMCAwIDEgMWg1djNoMnYtNC4wMDRhMSAxIDAgMCAwLS4yNDEtLjY0N2wtNi03QTEgMSAwIDAgMCAyNiAxMGwtMTMgLjAwM2ExIDEgMCAwIDAtMSAxVjMwaDJ6Ii8+PC9nPjwvc3ZnPg==">Translate</td><td class="wrap">languages</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVRyYW5zY3JpYmVfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zMi4wMDkgMjQuMDAyaDUuOTk3di0ySDMyLjAxem0wLTUuMDMxaDcuOTk2di0ySDMyLjAxem01Ljk5NyA5LjAzMWg5Ljk5NnYtMmgtOS45OTZ6bTItNGg3Ljk5NnYtMmgtNy45OTd6TTUyIDQzLjAwNEg0MC4wMDV2Mkg1M2ExIDEgMCAwIDAgMS0xVjMwLjAwMmgtMnpNNTAuMzcgMThsLTUuMzY3LTQuNzc0djQuNzc0ek01NCAxOXY2aC0ydi01aC03Ljk5NmExIDEgMCAwIDEtMS0xdi03bC0xMi45OTUuMDAydjkuOTk4SDI4LjAxVjExLjAwM2ExIDEgMCAwIDEgMS0xTDQ0LjAwNCAxMGMuMjQgMCAuNDc3LjA4Ni42NjQuMjUybDguOTk2IDhjLjIxNy4xOTUuMzM2LjQ2OS4zMzYuNzQ5TTE2LjAxNSA0MS4wMDRoMS45OTl2LTYuMDAxaC0yem0yLjk5OSAyaDEuOTk5VjMyLjAwM2gtMnptMi45OTgtMmgydi04LjAwMWgtMnptMyAzaDEuOTk5VjMxLjAwMmgtMnptMi45OTgtM2gydi04LjAwMWgtMnptMi45OTkgM2gyVjMxLjAwMmgtMnptMi45OTktNGgxLjk5OXYtNi4wMDFoLTJ6bTIuMTY1IDQuNDQ5IDEuNjY3IDEuMTAyYy0yLjYyNyAzLjk3OC03LjE2IDYuNDUtMTEuODMgNi40NS0yLjQgMC00Ljg3MS0uNjU3LTcuMDI2LTEuODZsLTcuMTkgMy43MjRjLS4xODcuMDg5LS4zOC4xMzEtLjU3LjEzMS0uMzMgMC0uNjQ3LS4xMy0uODgyLS4zNzVhMS4yMyAxLjIzIDAgMCAxLS4yLTEuNDIzbDMuNzE5LTcuMTQ3Yy0xLjIzNS0xLjk2Ny0yLjMwNS00LjE2LTIuMzA1LTYuODI1IDAtOC4yNDUgNi4wOC0xNC4yMjggMTQuNDU1LTE0LjIyOCAyLjYzIDAgNS4yMzIuNzQzIDcuNTIgMi4xNDhsLTEuMDQ3IDEuNzA0Yy0xLjk0NC0xLjE5NC00LjI0My0xLjg1Mi02LjQ3My0xLjg1Mi02LjE5IDAtMTIuNDU2IDQuMi0xMi40NTYgMTIuMjI4IDAgMi4zNjggMS4xMDQgNC4zOTMgMi4yOTggNi4yMjhhMSAxIDAgMCAxIC4wNDggMS4wMDhsLTIuODY4IDUuNTEgNS41Mi0yLjg2YTEgMSAwIDAgMSAuOTgxLjAzNWMxLjkyNyAxLjE3OCA0LjI4NyAxLjg1NCA2LjQ3NyAxLjg1NCA0LjAwNSAwIDcuOS0yLjEyOCAxMC4xNjItNS41NTIiLz48L2c+PC9zdmc+">Transcribe</td><td class="wrap">speech → text; PII redaction; Custom Vocabulary (words) vs Custom Language Model (context); toxicity detection</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVBvbGx5XzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMWE4OGQiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzIuMDA4IDMxLjAwMmg1LjAwMnYtMmgtNS4wMDJ6bTAgOC45OTloMnYtNGgtMnptLTkuMDAzLTEzaDN2LTEuOTk5aC0zem0tOS4wMDQgOGgxMi4wMDV2LTJIMTR6bTAtNGgxNi4wMDZ2LTJIMTQuMDAxem0xNS4wMDYgMTBoMnYtN2gtMnptMTUuMDA2IDBoMnYtNmgtMnptLTMuMDAxIDJoMlYzM2gtMnptLTMuMDAyLTFoMi4wMDF2LThoLTJ6bS0zLTFoMnYtN2gtMnptMTcuODU0IDEwLjIyMi0zLjQ1My02Ljc1NGExMy4yIDEzLjIgMCAwIDAgMS44MjktNi43MzljMC03LjM4Mi02LjAwNi0xMy4zODktMTMuMzg3LTEzLjM4OS0yLjE4OCAwLTQuMzU0LjUzNi02LjI2MyAxLjU1bC45NCAxLjc2NmExMS40IDExLjQgMCAwIDEgNS4zMjMtMS4zMTZjNi4yNzggMCAxMS4zODYgNS4xMSAxMS4zODYgMTEuMzkgMCAyLjIwNi0uNjI3IDQuMzMtMS44MTMgNi4xNDJhMSAxIDAgMCAwLS4wNTQgMS4wMDNsMi42MzIgNS4xNDhMNDQuNzYgNDcuNGExIDEgMCAwIDAtLjk2Ny4wNCAxMS40NCAxMS40NCAwIDAgMS01Ljk0IDEuNjcxYy01LjY2OCAwLTEwLjUyMi00LjIyMy0xMS4yODctOS44MjVsLTEuOTg0LjI3MmMuOTAzIDYuNTg2IDYuNjA4IDExLjU1MyAxMy4yNzEgMTEuNTUzIDIuMjY3IDAgNC41MDEtLjU3OSA2LjQ5NS0xLjY4bDYuODkzIDMuNDQ4YTEuMjI4IDEuMjI4IDAgMCAwIDEuNDE3LS4yNTYgMS4yMSAxLjIxIDAgMCAwIC4yMDYtMS40TTE0LjAwMSAyNy4wMDJoNy4wMDN2LTJIMTR6bTExLjAwNC04aDUuMzcybC01LjM3Mi00Ljc3MnptLTEyLjAwNCAxMkgxMXYtMTlhMSAxIDAgMCAxIDEtLjk5OUwyNC4wMDUgMTFjLjI0IDAgLjQ3OC4wOS42NjQuMjU2bDkuMDA0IDhhMSAxIDAgMCAxIC4zMzYuNzQ2djNoLTJ2LTJoLTguMDA0YTEgMSAwIDAgMS0xLTFWMTNMMTMgMTMuMDAzek0xMyA0MWgxMS4wMDR2MkgxMmExIDEgMCAwIDEtMS0xdi03aDJ6Ii8+PC9nPjwvc3ZnPg==">Polly</td><td class="wrap">text → speech; Lexicons, SSML, speech marks (lip sync)</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVJla29nbml0aW9uXzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMWE4OGQiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJtNTAuNTggNDcuMjMtOS43My05LjQ2NmExNi44IDE2LjggMCAwIDEtMy4wODEgMy4wODJsOS40OTUgOS43MTZjLjgwNy44MDUgMi4wMzIuMzE4IDIuODI3LS40NzUuODMtLjgzMiAxLjI2Ni0yLjA4LjQ4OC0yLjg1Nk0yNy42NTIgNDIuMjhjOC4wNjcgMCAxNC42MjktNi41NjMgMTQuNjI5LTE0LjYyOHMtNi41NjItMTQuNjI4LTE0LjYzLTE0LjYyOGMtOC4wNjYgMC0xNC42MyA2LjU2Mi0xNC42MyAxNC42MjhzNi41NjQgMTQuNjI4IDE0LjYzIDE0LjYyOG0yMy44NjggOS4yMzdjLS45ODIuOTgyLTIuMTQ4IDEuNDg0LTMuMjUyIDEuNDg0YTMuNCAzLjQgMCAwIDEtMi40NDMtMS4wMTZsLTkuNzYtOS45ODlhMTYuNTMgMTYuNTMgMCAwIDEtOC40MTMgMi4zMDZDMTguNDcgNDQuMzAxIDExIDM2LjgzMSAxMSAyNy42NTFTMTguNDcgMTEgMjcuNjUzIDExYzkuMTgxIDAgMTYuNjUyIDcuNDcgMTYuNjUyIDE2LjY1IDAgMy4wNy0uODUgNS45MzktMi4zMDQgOC40MWw5Ljk5OCA5LjczYzEuNTAxIDEuNSAxLjI5MSAzLjk1OC0uNDc4IDUuNzI2TTM3Ljg0NCAyNy42NTFjMC01LjcxNS00LjQ3Ny0xMC4xOTEtMTAuMTkxLTEwLjE5MVMxNy40NiAyMS45MzYgMTcuNDYgMjcuNjVjMCA1LjcxNSA0LjQ3NyAxMC4xOTEgMTAuMTkyIDEwLjE5MXMxMC4xOS00LjQ3NiAxMC4xOS0xMC4xOW0yLjAyMyAwYzAgNi44NDktNS4zNjUgMTIuMjEzLTEyLjIxNCAxMi4yMTNTMTUuNDM4IDM0LjUgMTUuNDM4IDI3LjY1czUuMzY2LTEyLjIxNCAxMi4yMTUtMTIuMjE0IDEyLjIxNCA1LjM2NSAxMi4yMTQgMTIuMjE0bS0xNS42MTQgMi41MDhoLTIuMDIydjQuMDQ2aDQuMDQ1di0yLjAyM2gtMi4wMjN6bS0yLjAyMi01LjA1NmgyLjAyMnYtMi4wMjJoMi4wMjN2LTIuMDIzaC00LjA0NXptNy4wOC0yLjAyMmgyLjAyMnYyLjAyMmgyLjAyM3YtNC4wNDVoLTQuMDQ1em0yLjAyMiA3LjA3OGgyLjAyM3Y0LjA0NmgtNC4wNDV2LTIuMDIzaDIuMDIyeiIvPjwvZz48L3N2Zz4=">Rekognition</td><td class="wrap">objects/faces/text in images+video; Custom Labels (your logo); content moderation + A2I</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUxleF80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTM4LjkyMSAzNi4zNjdhLjc1Ni43NTYgMCAwIDAtMS4wNzMgMCAuNzY0Ljc2NCAwIDAgMCAwIDEuMDc3Ljc1Ny43NTcgMCAwIDAgMS4wNzMgMCAuNzY1Ljc2NSAwIDAgMCAwLTEuMDc3bTEuNDE0LTEuNDJhMi43OCAyLjc4IDAgMCAxIDAgMy45MTcgMi43NSAyLjc1IDAgMCAxLTEuOTUxLjgwOSAyLjc0IDIuNzQgMCAwIDEtMS45NS0uODEgMi43OCAyLjc4IDAgMCAxIDAtMy45MTUgMi43NTYgMi43NTYgMCAwIDEgMy45MDEtLjAwMW0yLjk1OCAzLjQxMi0xLjE2Mi0uNzc3YTEgMSAwIDAgMS0uNDM0LS42NzRsLS4xNTktLjk3OGExIDEgMCAwIDEgLjIwMi0uNzgzbC44NzItMS4xMDktMS4zNzEtMS4zNzUtMS4wOTkuODczYy0uMjIyLjE3NS0uNTA2LjI1LS43ODMuMjA0bC0uOTcyLS4xNmExIDEgMCAwIDEtLjY3MS0uNDMzbC0uNzc2LTEuMTctMS43MjguODg0LjQ4IDEuM2MuMDk3LjI2Mi4wODIuNTUtLjA0Mi44bC0uNDUuOWMtLjEyNy4yNTMtLjM1My40NDEtLjYyNC41MTdsLTEuMzQyLjM3OC4zMDMgMS45MjIgMS40MDUtLjA1N2MuMjc1LS4wMS41NTEuMDk1Ljc1LjI5M2wuNjg5LjY5NGMuMTk3LjE5OC4zMDMuNDcuMjkxLjc1bC0uMDU3IDEuNDEzIDEuOTE1LjMwNS4zNzUtMS4zNDVjLjA3Ny0uMjczLjI2NC0uNTAxLjUxNy0uNjI3bC44OTgtLjQ1MWMuMjQ3LS4xMjQuNTM2LS4xMzkuNzk0LS4wNDNsMS4yOTguNDgzem0yLjE4Ni4xMTUtMS42OSAzLjMyNmExIDEgMCAwIDEtMS4yMzguNDg2bC0xLjcyNi0uNjQyLS4xMTMuMDU3LS40OTYgMS43NzZhMSAxIDAgMCAxLTEuMTIuNzIybC0zLjY3My0uNTg1Yy0uNS0uMDgtLjg2Mi0uNTI0LS44NDItMS4wMzNsLjA3NS0xLjg2Ni0uMDctLjA3LTEuODU2LjA3NmgtLjA0MmExIDEgMCAwIDEtLjk4Ny0uODQ2bC0uNTgxLTMuNjg3Yy0uMDgtLjUwMy4yMjktLjk4Ni43MTctMS4xMjRsMS43NzItLjQ5OS4wNTctLjExNC0uNjM5LTEuNzNhMS4wMDcgMS4wMDcgMCAwIDEgLjQ4NC0xLjI0NGwzLjMxMy0xLjY5NGExIDEgMCAwIDEgMS4yODYuMzM4bDEuMDI5IDEuNTQ4LjEwNy4wMTggMS40NTEtMS4xNTRhMSAxIDAgMCAxIDEuMzI4LjA3OGwyLjYzIDIuNjRjLjM1OS4zNTkuMzkzLjkzMi4wNzggMS4zMzFsLTEuMTUgMS40NjEuMDE5LjExIDEuNTQgMS4wM2MuNDIzLjI4Mi41NjcuODM4LjMzNyAxLjI5MU01MSAyOS4wN2MtLjAwMS4wMzgtLjA0LjAwMS0uMDYzLS4wMDhsLTI1Ljg0NS4wMDhhLjUuNSAwIDAgMC0uMDkyLjA5M3YxNS44NzZjLjAyNC4wMzIuMDYxLjA3LjA5Mi4wOTNoMTIuNjM5Yy40NiAwIC44NjIuMTYgMS4yMzIuNDg3TDQ0IDUwLjMwM3YtMy4xNjRjMC0uOTk1IDEuMDEtMi4wMDggMi0yLjAwOGg1em0yIDB2MTYuMDYyYzAgMS4wNS0uOTUzIDIuMDA4LTIgMi4wMDhoLTQuOTA4YS41LjUgMCAwIDAtLjA5Mi4wOTJ2NC4zMDRBMS40NyAxLjQ3IDAgMCAxIDQ0LjUzNCA1M2MtLjM1MSAwLS42OTktLjEyNi0uOTcyLS4zNjhsLTUuOTA2LTUuNDkzSDI1Yy0uOTkgMC0yLTEuMDEzLTItMi4wMDhWMjkuMDY5YzAtLjk5NSAxLjAxLTIuMDA3IDItMi4wMDdoMjZjMS4wNDguMDAzIDIgLjk2IDIgMi4wMDdtLTI0LTQuMDE1aDN2LTIuMDA4aC0zem0tMTQgMGgxMnYtMi4wMDhIMTV6bTEwLTQuMDE2aDl2LTIuMDA3aC05em0tMTAgMGg3di0yLjAwN2gtN3ptMTYtNC4wMTVoM3YtMi4wMDhoLTN6bS0xNiAwaDE0di0yLjAwOEgxNXptNS4yMDQgMTMuNDQ3IDEuNTkyIDEuMjE0LTMuMzU2IDQuNDA0Yy0uMjk1LjI2Mi0uNjY1LjQtMS4wMzUuNEExLjM4NSAxLjM4NSAwIDAgMSAxNiAzNS4wNzl2LTUuMDA1aC0zYy0xLjA2NSAwLTItLjkzOC0yLTIuMDA4VjEzLjAwOGMwLTEuMDcuOTM1LTIuMDA4IDItMi4wMDhoMjNjLjk5IDAgMiAxLjAxMyAyIDIuMDA4djEyLjA0NmgtMlYxMy4xYS41LjUgMCAwIDAtLjA5Mi0uMDkySDEzdjE1LjA1N2gzYzEuMDY2IDAgMiAuOTM5IDIgMi4wMDh2My4zMDh6Ii8+PC9nPjwvc3ZnPg==">Lex</td><td class="wrap">chatbots: intents + slots, Lambda fulfillment</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVBlcnNvbmFsaXplXzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMWE4OGQiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzMuOTg5IDI4LjU0MWMwIDEuMDkyLS44OTIgMS45OC0xLjk4OSAxLjk4LTEuMTUzIDAtMS45ODktLjc2OC0xLjk4OS0xLjgyNiAwLTEuMTM3LjkzLTIuMTMzIDEuOTg5LTIuMTMzIDEuMDk3IDAgMS45ODkuODg4IDEuOTg5IDEuOThtMi44NDIgNy44OTVoLTkuNjZjLjMyNi0xLjQ1NCAxLjM4LTMuOTM2IDQuNzg0LTMuOTM2IDMuNDg4IDAgNC41NTIgMi40NjYgNC44NzYgMy45MzZtLTguODA5LTcuNzQxYzAgLjk0LjM1MyAxLjc4LjkyNSAyLjQzNi0yLjg5NCAxLjMwNi0zLjg0OCA0LjQxOC0zLjkwNyA2LjI2M2EuOTkuOTkgMCAwIDAgLjk5MyAxLjAyMWgxMS45MzRhLjk4OS45ODkgMCAwIDAgLjk5My0xLjAyMWMtLjA2LTEuODQ5LTEuMDI3LTQuOTY4LTMuOTctNi4yN2EzLjkgMy45IDAgMCAwIC45ODgtMi41ODNjMC0yLjE4My0xLjc4NC0zLjk1OS0zLjk3OC0zLjk1OS0yLjE1NiAwLTMuOTc4IDEuODg0LTMuOTc4IDQuMTEzbTIyLjgwNiA0LjQ2OC0uMDQtLjAyNGExIDEgMCAwIDEtLjgwOC40MTggMSAxIDAgMCAxLS43MDMtLjI5bC0yLjg5NS0yLjg4MSAxLjQwNi0xLjQuOTk0Ljk5Yy0uOTM2LTUuOTEtNS4wMTctMTEuMDI4LTEwLjczNy0xMy4xODhsLjcwNS0xLjg1MkM0NS4xMDMgMTcuMzM2IDQ5LjY0IDIzIDUwLjcyMiAyOS41NWwuNTgyLS45NDZMNTMgMjkuNjM5ek0yNi4wMTIgNDguMzQ3bC0uNzA0IDEuODVjLTYuMzM2LTIuMzkzLTEwLjg2NC04LjAzOS0xMS45Ni0xNC41NjlsLS42NTIgMS4wNkwxMSAzNS42NTJsMi4xNzItMy41MjQuMDI0LjAxNGEuOTguOTggMCAwIDEgLjUwNi0uNDkgMSAxIDAgMCAxIDEuMDgzLjIxNWwyLjg5NiAyLjg4LTEuNDA2IDEuNDAxLS45OTQtLjk4OWMuOTM2IDUuOTA4IDUuMDEzIDExLjAyNiAxMC43MzEgMTMuMTg3bTIxLjg3NS05Ljc5MiAxLjg2LjcwM2MtMi40OTggNi41NDYtOC41MTcgMTEuMTQ3LTE1LjM5NyAxMi4wMDVsMS4zNzQgMS4zMDRMMzQuMzUxIDU0bC0zLjAwNi0yLjg1My4wMDctLjAwOGExIDEgMCAwIDEtLjI0LS4zMy45OS45OSAwIDAgMSAuMjE2LTEuMDc5bDIuODk1LTIuODggMS40MDYgMS4zOTktLjk5NC45ODljNS45MzctLjkzMiAxMS4wOC00Ljk5MSAxMy4yNTItMTAuNjgzTTE2LjE3NCAyNi41OGwtMS44NTgtLjcwM2MyLjUwOS02LjU4IDguNTc3LTExLjE5MyAxNS41LTEyLjAxOGwtMS41MDQtMS40MjdMMjkuNjg1IDExbDMuMDA2IDIuODUzLS4wNjMuMDY5YTEgMSAwIDAgMSAuMzIyLjQwNC45OS45OSAwIDAgMS0uMjE2IDEuMDhsLTIuODk1IDIuODgtMS40MDYtMS40Ljk5My0uOTg4Yy01LjkzOC45MzEtMTEuMDggNC45OS0xMy4yNTIgMTAuNjgzTTQyLjk0IDMyLjVjMCA2LjAwMi00LjkwOCAxMC44ODctMTAuOTM5IDEwLjg4N1MyMS4wNiAzOC41MDIgMjEuMDYgMzIuNSAyNS45NyAyMS42MTMgMzIgMjEuNjEzIDQyLjk0IDI2LjQ5OCA0Mi45NCAzMi41bS0yMy44NjcgMGMwIDcuMDk0IDUuOCAxMi44NjYgMTIuOTI4IDEyLjg2NlM0NC45MjggMzkuNTk0IDQ0LjkyOCAzMi41IDM5LjEyOCAxOS42MzQgMzIgMTkuNjM0IDE5LjA3MiAyNS40MDYgMTkuMDcyIDMyLjUiLz48L2c+PC9zdmc+">Personalize</td><td class="wrap">recommendations (Amazon.com tech); recipes: User-Personalization, Ranking, Trending-Now, Similar-Items</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVRleHRyYWN0XzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMWE4OGQiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTguNDY0IDQxYzEuNzkxIDIuNTQ5IDQuNzQ3IDQuMjIyIDguMDkyIDQuMjIyIDUuNDUyIDAgOS44ODgtNC40MzYgOS44ODgtOS44ODlzLTQuNDM2LTkuODg5LTkuODg4LTkuODg5Yy0zLjg5NyAwLTcuMjY1IDIuMjcyLTguODc1IDUuNTU2aDEuMjUxYzEuNTExLTIuNjUgNC4zNTktNC40NDQgNy42MjQtNC40NDQgNC44NCAwIDguNzc3IDMuOTM3IDguNzc3IDguNzc3IDAgNC44NDEtMy45MzcgOC43NzgtOC43NzcgOC43NzhBOC43NiA4Ljc2IDAgMCAxIDE5Ljg2MiA0MXpNMzAgMzd2LTJoMy4zMTdjLS4xNzYtMy41ODItMy4xMzYtNi40NDQtNi43NjEtNi40NDRTMTkuOTcgMzEuNDE4IDE5Ljc5NCAzNUgyM3YyaC0zLjAwN2MuNzQ2IDIuOTMzIDMuNDAyIDUuMTExIDYuNTYzIDUuMTExQTYuNzQgNi43NCAwIDAgMCAzMC4yNjQgNDFIMjh2LTJoNC4yNDdhNi43IDYuNyAwIDAgMCAuODctMnptLTEyLjYyIDJoMS4yMWE4LjcgOC43IDAgMCAxLS44MTMtMy42NjdjMC0uODA5LjEyLTEuNTg5LjMyNS0yLjMzM2gtMS4xNDVhMTAgMTAgMCAwIDAtLjI5IDIuMzMzYzAgMS4yOTYuMjU4IDIuNTMyLjcxMyAzLjY2N20tMS4yNzMgMkgxNHYtMmgxLjI1MmExMiAxMiAwIDAgMS0uNDU0LTJoLTEuOTI5bC45NjMgMS40NDUtMS42NjQgMS4xMS0yLTNhMSAxIDAgMCAxIDAtMS4xMWwyLTMgMS42NjQgMS4xMUwxMi44NjkgMzVoMS44MTVjLjAxOS0uNjgyLjA4Ny0xLjM1Mi4yMTctMkgxNHYtMmgxLjQ5NmMxLjczOC00LjQxNyA2LjAzNC03LjU1NiAxMS4wNi03LjU1NiAzLjMxMSAwIDYuMzA3IDEuMzY0IDguNDY2IDMuNTU2SDQ2djJoLTkuNGExMS44IDExLjggMCAwIDEgMS44MjggNkg0NnYyaC03LjY4NmMtLjgxNSA1Ljc2OC01Ljc3IDEwLjIyMi0xMS43NTggMTAuMjIyLTQuNTA1IDAtOC40MzMtMi41MTktMTAuNDQ5LTYuMjIybTEyLjc4Mi05Ljc3OGgtNC42NjZhMSAxIDAgMCAwLTEgMXYxLjU1Nmgydi0uNTU2aC4zMzN2MS44ODlIMjV2MmgzLjExMXYtMmgtLjU1NXYtMS44ODloLjMzM3YuNTU2aDJ2LTEuNTU2YTEgMSAwIDAgMC0xLTFNNDAgMzNoNnYtMmgtNnptMCA4aDZ2LTJoLTZ6bTQtMThoMi41ODZMNDQgMjAuNDE0em01LjcwNy4yOTNBMSAxIDAgMCAxIDUwIDI0djI3YTEgMSAwIDAgMS0xIDFIMjUuNzc3YTEgMSAwIDAgMS0xLTF2LTJoMnYxSDQ4VjI1aC01YTEgMSAwIDAgMS0xLTF2LTVIMjd2M2gtMnYtNGExIDEgMCAwIDEgMS0xaDE3Yy4yNjYgMCAuNTIuMTA1LjcwNy4yOTN6TTU0IDIwdjMwaC0yVjIwLjQxNEw0Ni41ODYgMTVIMjl2MWgtMnYtMmExIDEgMCAwIDEgMS0xaDE5Yy4yNjYgMCAuNTIuMTA1LjcwNy4yOTNsNiA2QTEgMSAwIDAgMSA1NCAyMCIvPjwvZz48L3N2Zz4=">Textract</td><td class="wrap">extract text/handwriting/forms/tables from scans</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUtlbmRyYV80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI5LjAwMiAxNGgxOC4wMDJ2LTJIMjkuMDAyem0tOCAwaDJ2LTJoLTJ6TTE3IDE0aDJ2LTJoLTJ6bS00IDBoMnYtMmgtMnptMzEuMTQ2IDI1LjY3NWMwIDIuNTEyLTEuOTY4IDQuNDgtNC40OCA0LjQ4LTIuNTE0IDAtNC40ODEtMS45NjgtNC40ODEtNC40OHMxLjk2Ny00LjQ4MiA0LjQ4LTQuNDgyIDQuNDggMS45NyA0LjQ4IDQuNDgybTIgMGMwLTMuNjM0LTIuODQ2LTYuNDgyLTYuNDgtNi40ODJzLTYuNDgxIDIuODQ4LTYuNDgxIDYuNDgyIDIuODQ2IDYuNDggNi40OCA2LjQ4IDYuNDgxLTIuODQ2IDYuNDgxLTYuNDhtNy43MDcgMTIuNTk0LTUuODMyLTUuNjc1YTExIDExIDAgMCAxLTEuNDM2IDEuNDM1bDUuNjk1IDUuODI5Yy4zMjkuMzI3Ljg4Ny4wNzUgMS4yNjUtLjMwMy4zOTYtLjM5Ni42MjktLjk2NS4zMDgtMS4yODZtLTE0LjE4OC0zLjc0YzQuODgyIDAgOC44NTQtMy45NzIgOC44NTQtOC44NTQgMC00Ljg4My0zLjk3Mi04Ljg1NC04Ljg1NC04Ljg1NHMtOC44NTQgMy45NzEtOC44NTQgOC44NTQgMy45NzIgOC44NTQgOC44NTQgOC44NTRtMTUuMjk0IDYuNDRjLS42ODMuNjgzLTEuNTE4IDEuMDMxLTIuMzEgMS4wMzFhMi41IDIuNSAwIDAgMS0xLjc5MS0uNzM2bC01Ljk1MS02LjA5YTEwLjggMTAuOCAwIDAgMS01LjI0MiAxLjM1NWMtNS45ODQgMC0xMC44NTQtNC44Ny0xMC44NTQtMTAuODU0IDAtNS45ODYgNC44Ny0xMC44NTQgMTAuODU0LTEwLjg1NCA1Ljk4NSAwIDEwLjg1NSA0Ljg2OCAxMC44NTUgMTAuODU0IDAgMS45LS40OTUgMy42ODUtMS4zNTYgNS4yNGw2LjA5MyA1LjkzYzEuMDk1IDEuMDk1Ljk2MyAyLjg2NS0uMjk4IDQuMTI1TTEwIDE2LjAwMmg0MC4wMDV2LTVjMC0uNTUyLS40NDktMS0xLTFIMTFjLS41NTIgMC0xIC40NDgtMSAxem0yMy42MDYgMzUuMDA0SDlhMSAxIDAgMCAxLTEtMVYxMS4wMDFDOCA5LjM0NSA5LjM0NiA4IDExIDhoMzguMDA0YzEuNjU1IDAgMyAxLjM0NiAzIDN2MjUuMDA0aC0uMDI0YTEyLjggMTIuOCAwIDAgMC0xLjk3NS0zLjkzNlYxOC4wMDFIMTB2MzEuMDA0aDIwLjg1Yy44MjYuNzggMS43NDcgMS40NTggMi43NTYgMk0xMyAyNy4wMDJoMzQuMDAzdi0ySDEzLjAwMXptMCAxMC4wMDJ2MmgxMy44NDVjLjAzNS0uNjgxLjExMS0xLjM1MS4yNDktMnptMC02LjAwMWgxNy4yMDRhMTMgMTMgMCAwIDAtMS41MDYgMkgxMy4wMDF6Ii8+PC9nPjwvc3ZnPg==">Kendra</td><td class="wrap">ML document search, natural-language answers, incremental learning</td></tr>
+      <tr><td>Mechanical Turk</td><td class="wrap">crowdsourced human micro-tasks</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUF1Z21lbnRlZC1BSS1BMklfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00MC45NjEgNTEuODIzYy0uMjk2LTIuNzc2LTEuODEyLTUuMy00LjEwNC02Ljc0NGE4LjEgOC4xIDAgMCAwLTQuMzI3LTEuMjU2Yy00LjM1OSAwLTcuOTYyIDMuNTA2LTguNDMyIDh6bS0xMi45MTUtMTQuNWMwIDIuNDgxIDIuMDE5IDQuNSA0LjUgNC41czQuNS0yLjAxOSA0LjUtNC41LTIuMDE5LTQuNS00LjUtNC41YTQuNTA1IDQuNTA1IDAgMCAwLTQuNSA0LjVtMTQuOTY5IDE1LjVhMSAxIDAgMCAxLTEgMUgyMy4wNDZhMSAxIDAgMCAxLTEtMWMwLTQuNjYxIDIuNzgyLTguNjQ1IDYuNjkyLTEwLjI0NGE2LjQ5IDYuNDkgMCAwIDEtMi42OTItNS4yNTZjMC0zLjU4NCAyLjkxNi02LjUgNi41LTYuNXM2LjUgMi45MTYgNi41IDYuNWE2LjUgNi41IDAgMCAxLTIuNzA4IDUuMjY5Yy41NDUuMjIzIDEuMDguNDc3IDEuNTg1Ljc5NSAzLjE0MSAxLjk3OSA1LjA5MiA1LjU5NSA1LjA5MiA5LjQzNk0xNi41MzEgMzIuOTY2bDEuMDMgMS43MTQgNC40NTctMi42NzQgMi40NzMgMS42NDkgMS4xMS0xLjY2NC0yLjU1Ni0xLjcwNC4wMDEtMy4yNDQgNC40OTctMi41NzlhMSAxIDAgMCAwIC41MDMtLjg2OHYtNi41NThoLTJ2NS45NzlsLTQuMzI1IDIuNDgtNC42NzUtMi42MDl2LTUuMjc5bDQtMi4zODZ2NC42aDJ2LTUuNzkybDMuMTgxLTEuODk3IDQuODE5IDIuMzE4djE0LjM3MWgydi0xNWMwLS4zODQtLjIyMS0uNzM1LS41NjYtLjkwMWwtNS44NzEtMi44MjRhMSAxIDAgMCAwLS45NDYuMDQzbC0xMC4xMyA2LjA0MWExIDEgMCAwIDAtLjQ4Ny44NTl2Ni4xMDVsLTQuMzcxIDEuNzQ4YTEgMSAwIDAgMC0uNjI5LjkyNUwxMCAzNi42NmExIDEgMCAwIDAgLjQ3Ljg1Mmw0LjU3NiAyLjg2NXY1LjQ0NmExIDEgMCAwIDAgLjQuOGw0IDMgMS4yLTEuNi0zLjYtMi43di00LjkzNGw0LjUxNS0yLjcwOS0xLjAzLTEuNzE0LTQuNDc0IDIuNjg0LTQuMDU1LTIuNTM4LjAxNi0zLjcwNiA0LjU0My0yLjcyNi0xLjAzLTEuNzE0LTMuNTAzIDIuMTAyLjAxNS0zLjU2NyA0LjI5NC0xLjcxOCA0LjcwOSAyLjYyNy0uMDAxIDIuODQ3em0yNC4wOTYgMS4xNDlhOS4zIDkuMyAwIDAgMCAuNDAzLTIuNjg5YzAtNC4xMTUtMi43NTUtNy43NjQtNi43LTguODc0bC0uNTQxIDEuOTI2YzMuMDg2Ljg2OCA1LjI0MSAzLjcyNSA1LjI0MSA2Ljk0OCAwIC43MDUtLjEwNiAxLjQxNS0uMzE3IDIuMTA5em0xMi4zNTcgMS4wMjctMi44NyA3LjUxMWExIDEgMCAwIDEtMS4zNDUuNTU0bC0yLjI3Mi0xLjAyNS0uMTk4LjMyMmMtLjY4OCAxLjEyMS0xLjI4MiAyLjA5LTIuNjQ3IDMuMTJsLTEuMjA1LTEuNTk3YzEuMDYzLS44MDIgMS41MTgtMS41NDMgMi4xNDgtMi41NjkuMjA5LS4zNDIuNDMxLS43MDQuNjkyLTEuMDk2YTEgMSAwIDAgMSAxLjI0NC0uMzU4bDIuMDkzLjk0NCAyLjExMy01LjUzLTIuMi0uNjk5YTEgMSAwIDAgMS0uNjg2LTEuMDk5IDE2IDE2IDAgMCAwLS4xNTItNS40OThjLS4wOTUtLjQ4LjE2OS0uOTU4LjYyNi0xLjEzMmwyLjE0OS0uODEzLTIuNDIyLTUuNDA1LTIuMDQgMS4wNjFhMSAxIDAgMCAxLTEuMjYtLjI4NSAxNi4zIDE2LjMgMCAwIDAtNC4wMDYtMy43OCAxIDEgMCAwIDEtLjM1OC0xLjI0M2wuOTQ1LTIuMTAyLTUuNjIxLTIuMTQxLS43OTIgMS44NTYtMS44NC0uNzg1IDEuMTctMi43NGExIDEgMCAwIDEgMS4yNzUtLjU0Mmw3LjUxIDIuODZhMS4wMDMgMS4wMDMgMCAwIDEgLjU1NyAxLjM0NWwtMS4wNCAyLjMxNGExOC4zIDE4LjMgMCAwIDEgMy4yNjkgMy4wODdsMi4yNDctMS4xNjljLjI0Ni0uMTI2LjUzLS4xNDYuNzkxLS4wNTcuMjYuMDkuNDcxLjI4NC41ODMuNTM1bDMuMjkgNy4zNGExIDEgMCAwIDEtLjU1NyAxLjM0NWwtMi4zNjYuODk2YTE4IDE4IDAgMCAxIC4xMjQgNC40OTZsMi40Mi43NjlhMSAxIDAgMCAxIC42MzEgMS4zMSIvPjwvZz48L3N2Zz4=">A2I</td><td class="wrap">human review of low-confidence predictions</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUNvbXByZWhlbmQtTWVkaWNhbF80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTUyIDQzaC00YTEgMSAwIDAgMS0xLTF2LTRoLTR2NGExIDEgMCAwIDEtMSAxaC00djRoNGExIDEgMCAwIDEgMSAxdjRoNHYtNGExIDEgMCAwIDEgMS0xaDR6bTItMXY2YTEgMSAwIDAgMS0xIDFoLTR2NGExIDEgMCAwIDEtMSAxaC02YTEgMSAwIDAgMS0xLTF2LTRoLTRhMSAxIDAgMCAxLTEtMXYtNmExIDEgMCAwIDEgMS0xaDR2LTRhMSAxIDAgMCAxIDEtMWg2YTEgMSAwIDAgMSAxIDF2NGg0YTEgMSAwIDAgMSAxIDFNMTIuMTc1IDE2LjU3NSAxNyA0MC44NDRWMTUuNTgyek00MSAxMi40MjdWMTdoNS4xNzh6TTE5IDUwaDE3djJIMThhLjk4NS45ODUgMCAwIDEtLjk2MS0uODA5bC0uMDIuMDA0LTctMzUuMjA1YTEgMSAwIDAgMSAuNzgtMS4xNzRsNi4yLTEuMjc2VjExYTEgMSAwIDAgMSAxLTFoMjIuODk2Yy4yNDQgMCAuNDc5LjA4OS42NjIuMjVsNy4xMDUgNi4yNzVhMSAxIDAgMCAxIC4zMzguNzQ5VjM0aC0yVjE5aC03YTEgMSAwIDAgMS0xLTF2LTZIMTl6bTMtOWgxM3YtMkgyMnptMC01aDE5di0ySDIyem0wLTE1aDE1di0ySDIyem0wIDEwaDIxdi0ySDIyem03LTVoMTR2LTJIMjl6bS03IDBoNXYtMmgtNXoiLz48L2c+PC9zdmc+">Comprehend Medical</td><td class="wrap">PHI from clinical text (DetectPHI)</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVRyYW5zY3JpYmVfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zMi4wMDkgMjQuMDAyaDUuOTk3di0ySDMyLjAxem0wLTUuMDMxaDcuOTk2di0ySDMyLjAxem01Ljk5NyA5LjAzMWg5Ljk5NnYtMmgtOS45OTZ6bTItNGg3Ljk5NnYtMmgtNy45OTd6TTUyIDQzLjAwNEg0MC4wMDV2Mkg1M2ExIDEgMCAwIDAgMS0xVjMwLjAwMmgtMnpNNTAuMzcgMThsLTUuMzY3LTQuNzc0djQuNzc0ek01NCAxOXY2aC0ydi01aC03Ljk5NmExIDEgMCAwIDEtMS0xdi03bC0xMi45OTUuMDAydjkuOTk4SDI4LjAxVjExLjAwM2ExIDEgMCAwIDEgMS0xTDQ0LjAwNCAxMGMuMjQgMCAuNDc3LjA4Ni42NjQuMjUybDguOTk2IDhjLjIxNy4xOTUuMzM2LjQ2OS4zMzYuNzQ5TTE2LjAxNSA0MS4wMDRoMS45OTl2LTYuMDAxaC0yem0yLjk5OSAyaDEuOTk5VjMyLjAwM2gtMnptMi45OTgtMmgydi04LjAwMWgtMnptMyAzaDEuOTk5VjMxLjAwMmgtMnptMi45OTgtM2gydi04LjAwMWgtMnptMi45OTkgM2gyVjMxLjAwMmgtMnptMi45OTktNGgxLjk5OXYtNi4wMDFoLTJ6bTIuMTY1IDQuNDQ5IDEuNjY3IDEuMTAyYy0yLjYyNyAzLjk3OC03LjE2IDYuNDUtMTEuODMgNi40NS0yLjQgMC00Ljg3MS0uNjU3LTcuMDI2LTEuODZsLTcuMTkgMy43MjRjLS4xODcuMDg5LS4zOC4xMzEtLjU3LjEzMS0uMzMgMC0uNjQ3LS4xMy0uODgyLS4zNzVhMS4yMyAxLjIzIDAgMCAxLS4yLTEuNDIzbDMuNzE5LTcuMTQ3Yy0xLjIzNS0xLjk2Ny0yLjMwNS00LjE2LTIuMzA1LTYuODI1IDAtOC4yNDUgNi4wOC0xNC4yMjggMTQuNDU1LTE0LjIyOCAyLjYzIDAgNS4yMzIuNzQzIDcuNTIgMi4xNDhsLTEuMDQ3IDEuNzA0Yy0xLjk0NC0xLjE5NC00LjI0My0xLjg1Mi02LjQ3My0xLjg1Mi02LjE5IDAtMTIuNDU2IDQuMi0xMi40NTYgMTIuMjI4IDAgMi4zNjggMS4xMDQgNC4zOTMgMi4yOTggNi4yMjhhMSAxIDAgMCAxIC4wNDggMS4wMDhsLTIuODY4IDUuNTEgNS41Mi0yLjg2YTEgMSAwIDAgMSAuOTgxLjAzNWMxLjkyNyAxLjE3OCA0LjI4NyAxLjg1NCA2LjQ3NyAxLjg1NCA0LjAwNSAwIDcuOS0yLjEyOCAxMC4xNjItNS41NTIiLz48L2c+PC9zdmc+">Transcribe Medical</td><td class="wrap">HIPAA speech → text</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUhlYWx0aFNjcmliZV80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI5LjggNDMuMTY1Yy0uNjIyLTEuMjgtMi42NjQtMS45NjUtNC44MDItMi4xMjZ2LTMuMTY1bDIuMjMtMS4yMjZhLjYyLjYyIDAgMCAxIC43MDEuMDk5YzEuOTE2IDEuNzQ1IDQuNTExIDMuNzc0IDYuNzMxIDQuMzQ0LTEuMjI4Ljc5Ny0zLjMzOCAxLjc5NC00Ljg2IDIuMDc0TTIwLjAyNCA0NGMuMjU3LS4zMjcgMS42MjctMSAzLjk3NC0xczMuNzE4LjY3MyAzLjk3NSAxYy0uMjU3LjMyNy0xLjYyNyAxLTMuOTc1IDFzLTMuNzE3LS42NzMtMy45NzQtMW02Ljk3NCA0YzAgLjI0OS0xLjA2NCAxLTMgMXMtMy0uNzUxLTMtMSAxLjA2NS0xIDMtMSAzIC43NTEgMyAxbS02Ljc5OS0xMS4yNTNjLjE5NC0uMTc2LjQ2OC0uMjE0LjY2Ni0uMTE3bDIuMTMzIDEuMTcydjMuMjM3Yy0yLjEyMi4xNi00LjE1MS44MzctNC43ODggMi4xLTEuNTEyLS4zMDctMy41NDUtMS4yNzEtNC43NDItMi4wNDggMi4yMi0uNTcgNC44MTUtMi41OTkgNi43MzEtNC4zNDRNMjEuOTk4IDMwYzAtMS4xMDMuODk4LTIgMi0yIDEuMTAzIDAgMiAuODk3IDIgMnMtLjg5NyAyLTIgMi0yLS44OTctMi0ybTE0Ljc4OCA5LjQyNWMtLjI2NS0uMTIyLS41OC0uMTc4LS45OTEtLjE3OC0xLjM0NiAwLTMuNzg0LTEuNDg3LTYuNTItMy45NzgtLjgwOS0uNzM3LTEuOTYyLS44OTktMi45NzUtLjM5MmwtMS4zMDIuNzE1di0xLjczNGMxLjcyMS0uNDQ3IDMtMiAzLTMuODU4IDAtMi4yMDYtMS43OTMtNC00LTRzLTQgMS43OTQtNCA0YzAgMS44NTggMS4yOCAzLjQxMSAzIDMuODU4djEuNjYzbC0xLjIwNi0uNjYyYTIuNjA1IDIuNjA1IDAgMCAwLTIuOTM5LjQxYy0yLjczNiAyLjQ5MS01LjE3NCAzLjk3OC02LjUyMSAzLjk3OC0uNDExIDAtLjcyNS4wNTYtLjk5LjE3OC0uNDc3LjIxOS0uNzYyLjY0OC0uNzYyIDEuMTQ4IDAgMS44NTYgNS4yMTcgNC4yMzMgNy44MzYgNC42MTUuMzMyLjQzOC44NDEuNzk1IDEuNDY5IDEuMDctLjU1OS40ODUtLjg4NyAxLjA4MS0uODg3IDEuNzQyIDAgMS41MDMgMS42NjMgMi42OCA0IDIuOTQzVjU0aDJ2LTMuMDU3YzIuMzM4LS4yNjMgNC0xLjQ0IDQtMi45NDMgMC0uNjYxLS4zMjctMS4yNTctLjg4Ni0xLjc0Mi42MTYtLjI3IDEuMTE5LS42MTkgMS40NTEtMS4wNDYgMi41NjYtLjMxMyA3Ljk4NS0yLjc0OCA3Ljk4NS00LjYzOSAwLS41LS4yODUtLjkyOS0uNzYyLTEuMTQ4TTM0Ljk5OCAzMWg2di0yaC02em0wLTEwaDZ2LTJoLTZ6bTAgNWgxNHYtMmgtMTR6bTQgMTBoMTB2LTJoLTEwem00LTVoNnYtMmgtNnptMy0xNy4zN0w1MC43NzEgMTloLTQuNzczem03Ljc0OCA1LjcwNS04LTlhMSAxIDAgMCAwLS43NDgtLjMzNWgtMTRhMSAxIDAgMCAwLTEgMXYyMGgyVjEyaDEydjhhMSAxIDAgMCAwIDEgMWg3djIxaC0xMXYyaDEyYTEgMSAwIDAgMCAxLTFWMjBhMSAxIDAgMCAwLS4yNTItLjY2NSIvPjwvZz48L3N2Zz4=">HealthScribe</td><td class="wrap">clinical notes from patient-clinician audio</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--svc)">
+  <h2>AI hardware</h2>
+  <div class="in">
+    <div class="pair">
+      <b>GPU instances</b><span>P and G families</span>
+      <b>Trainium</b><span>training chip (Trn1), ~50% cheaper training</span>
+      <b>Inferentia</b><span>inference chip (Inf1/Inf2), high throughput, low cost</span>
+    </div>
+    <p class="note">Trn/Inf = lowest environmental footprint answer.</p>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="sagemaker" style="--c:var(--svc)">
+  <h2 class="dh">SageMaker</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--svc)">
+  <h2><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVNhZ2VNYWtlcl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTQzIDIwYTEuMDAxIDEuMDAxIDAgMCAxLTIgMCAxLjAwMSAxLjAwMSAwIDAgMSAyIDBtLTQgOGExLjAwMSAxLjAwMSAwIDAgMSAwIDIgMS4wMDEgMS4wMDEgMCAwIDEgMC0ybTAgMTVhMS4wMDEgMS4wMDEgMCAwIDEgMiAwIDEuMDAxIDEuMDAxIDAgMCAxLTIgMG03LjA1OS0xMC4wMzJhMS4wMDEgMS4wMDEgMCAwIDEtMiAwIDEuMDAxIDEuMDAxIDAgMCAxIDIgME01MiAzNS4zNjdsLTMuOTc4LTIuMDNjLjAxNC0uMTIyLjAzNy0uMjQyLjAzNy0uMzcgMC0xLjY1My0xLjM0Ni0zLTMtMy0xLjY1NSAwLTMgMS4zNDctMyAzIDAgMS42NTYgMS4zNDUgMy4wMDEgMyAzLjAwMS44MDQgMCAxLjUzMy0uMzIyIDIuMDczLS44NGwzLjgwNiAxLjk0My0zLjQ1MiAyLjA3MkExIDEgMCAwIDAgNDcgNDB2Ni40MzRsLTkuMDQ0IDUuNDI2TDMzIDQ5LjM4MlY0NGg0LjE4NUEyLjk5IDIuOTkgMCAwIDAgNDAgNDZjMS42NTQgMCAzLTEuMzQ2IDMtM3MtMS4zNDYtMy0zLTNhMi45OSAyLjk5IDAgMCAwLTIuODE1IDJIMzNWMzJhMSAxIDAgMCAwLS40LS44bC00LTMtMS4yIDEuNiAzLjYgMi43djMuOTUxbC00IDIuNTQ1di01LjAxNWExIDEgMCAwIDAtLjU1OC0uODk2TDIzIDMxLjM4di0zLjgxNGw0LjUxNS0yLjcxQTEgMSAwIDAgMCAyOCAyNHYtNWgtMnY0LjQzNGwtNCAyLjQtNC0yLjR2LTYuODQ2bDMtMS42NjZWMjFoMnYtNy4xOWwzLjAyNC0xLjY4TDMxIDE0LjYxNiAzMS4wMDEgMjRjMCAuMzM3LjE3LjY1LjQ1MS44MzZsNC43NDggMy4xMTZBMyAzIDAgMCAwIDM2IDI5YzAgMS42NTQgMS4zNDcgMyAzIDMgMS42NTUgMCAzLTEuMzQ2IDMtM3MtMS4zNDUtMy0zLTNjLS41NDcgMC0xLjA1NC4xNTgtMS40OTYuNDE2bC00LjUwMi0yLjk1NkwzMyAxNC42MThsNC45MjgtMi40NjRMNDYgMTcuNTM0VjE5aC0xLjE4NUEyLjk5IDIuOTkgMCAwIDAgNDIgMTdjLTEuNjU0IDAtMyAxLjM0Ni0zIDNzMS4zNDYgMyAzIDNhMi45OSAyLjk5IDAgMCAwIDIuODE1LTJINDZ2M2MwIC4zNzkuMjE0LjcyNS41NTMuODk1TDUyIDI3LjYxOHpNMjYuOTc3IDUxLjg0OGwtMy4yMDMtMS43NDYgMy43NDEtMi4yNDUtMS4wMy0xLjcxNC00Ljc0NyAyLjg0OEwxNyA0Ni40MDZ2LTUuODRsNC41MTUtMi43MDktMS4wMy0xLjcxNEwxNiAzOC44MzRsLTQtMi40di0zLjg2OGw0LjUxNS0yLjcxLTEuMDMtMS43MTNMMTIgMzAuMjMzdi0yLjYxNWw0Ljk1Ni0yLjQ3OEwyMSAyNy41NjZ2My44MTZsLTMuNDQ3IDEuNzIzLjg5NCAxLjc5IDMuNTU2LTEuNzc4TDI1IDM0LjYwMnY1LjY2N2wtNC41MzcgMi44ODcgMS4wNzQgMS42ODhMMzEgMzguODIydjEwLjYxMnptMjYuNDctMjUuNzQzLTUuNDQ2LTIuNzIzVjE3YzAtLjMzNC0uMTY3LS42NDYtLjQ0NS0uODMybC05LTZhMSAxIDAgMCAwLTEuMDAyLS4wNjNsLTUuNTUgMi43NzUtNS41NTctMi43NzVhMSAxIDAgMCAwLS45MzIuMDJsLTkgNUExIDEgMCAwIDAgMTYgMTZ2Ny4zODJsLTUuNDQ3IDIuNzIzYy0uMzM5LjE3LS41NTMuNTE2LS41NTMuODk1djEwYTEgMSAwIDAgMCAuNDg1Ljg1N0wxNSA0MC41NjZWNDdhMSAxIDAgMCAwIC41MjEuODc4bDExIDZhMSAxIDAgMCAwIC45OTQtLjAyMWw0LjUzLTIuNzE3IDUuNTA5IDIuNzU1YTEgMSAwIDAgMCAuOTYyLS4wMzhsMTAtNkExIDEgMCAwIDAgNDkgNDd2LTYuNDM0bDQuNTE0LTIuNzA5QTEgMSAwIDAgMCA1NCAzN1YyN2MwLS4zOC0uMjE0LS43MjUtLjU1My0uODk1Ii8+PC9nPjwvc3ZnPg==">SageMaker deployment</h2>
+  <div class="in">
+    <table>
+      <tr><th>Type</th><th>Payload</th><th>Use</th></tr>
+      <tr><td>Real-time</td><td>25 MB</td><td class="wrap">instant predictions</td></tr>
+      <tr><td>Serverless</td><td>4 MB</td><td class="wrap">sporadic traffic, tolerates cold starts</td></tr>
+      <tr><td>Async</td><td>1 GB</td><td class="wrap">big payload, long processing, S3 in/out</td></tr>
+      <tr><td>Batch</td><td>100 MB/batch</td><td class="wrap">whole dataset, S3 in/out</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--svc)">
+  <h2><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVNhZ2VNYWtlcl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjMDFhODhkIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTQzIDIwYTEuMDAxIDEuMDAxIDAgMCAxLTIgMCAxLjAwMSAxLjAwMSAwIDAgMSAyIDBtLTQgOGExLjAwMSAxLjAwMSAwIDAgMSAwIDIgMS4wMDEgMS4wMDEgMCAwIDEgMC0ybTAgMTVhMS4wMDEgMS4wMDEgMCAwIDEgMiAwIDEuMDAxIDEuMDAxIDAgMCAxLTIgMG03LjA1OS0xMC4wMzJhMS4wMDEgMS4wMDEgMCAwIDEtMiAwIDEuMDAxIDEuMDAxIDAgMCAxIDIgME01MiAzNS4zNjdsLTMuOTc4LTIuMDNjLjAxNC0uMTIyLjAzNy0uMjQyLjAzNy0uMzcgMC0xLjY1My0xLjM0Ni0zLTMtMy0xLjY1NSAwLTMgMS4zNDctMyAzIDAgMS42NTYgMS4zNDUgMy4wMDEgMyAzLjAwMS44MDQgMCAxLjUzMy0uMzIyIDIuMDczLS44NGwzLjgwNiAxLjk0My0zLjQ1MiAyLjA3MkExIDEgMCAwIDAgNDcgNDB2Ni40MzRsLTkuMDQ0IDUuNDI2TDMzIDQ5LjM4MlY0NGg0LjE4NUEyLjk5IDIuOTkgMCAwIDAgNDAgNDZjMS42NTQgMCAzLTEuMzQ2IDMtM3MtMS4zNDYtMy0zLTNhMi45OSAyLjk5IDAgMCAwLTIuODE1IDJIMzNWMzJhMSAxIDAgMCAwLS40LS44bC00LTMtMS4yIDEuNiAzLjYgMi43djMuOTUxbC00IDIuNTQ1di01LjAxNWExIDEgMCAwIDAtLjU1OC0uODk2TDIzIDMxLjM4di0zLjgxNGw0LjUxNS0yLjcxQTEgMSAwIDAgMCAyOCAyNHYtNWgtMnY0LjQzNGwtNCAyLjQtNC0yLjR2LTYuODQ2bDMtMS42NjZWMjFoMnYtNy4xOWwzLjAyNC0xLjY4TDMxIDE0LjYxNiAzMS4wMDEgMjRjMCAuMzM3LjE3LjY1LjQ1MS44MzZsNC43NDggMy4xMTZBMyAzIDAgMCAwIDM2IDI5YzAgMS42NTQgMS4zNDcgMyAzIDMgMS42NTUgMCAzLTEuMzQ2IDMtM3MtMS4zNDUtMy0zLTNjLS41NDcgMC0xLjA1NC4xNTgtMS40OTYuNDE2bC00LjUwMi0yLjk1NkwzMyAxNC42MThsNC45MjgtMi40NjRMNDYgMTcuNTM0VjE5aC0xLjE4NUEyLjk5IDIuOTkgMCAwIDAgNDIgMTdjLTEuNjU0IDAtMyAxLjM0Ni0zIDNzMS4zNDYgMyAzIDNhMi45OSAyLjk5IDAgMCAwIDIuODE1LTJINDZ2M2MwIC4zNzkuMjE0LjcyNS41NTMuODk1TDUyIDI3LjYxOHpNMjYuOTc3IDUxLjg0OGwtMy4yMDMtMS43NDYgMy43NDEtMi4yNDUtMS4wMy0xLjcxNC00Ljc0NyAyLjg0OEwxNyA0Ni40MDZ2LTUuODRsNC41MTUtMi43MDktMS4wMy0xLjcxNEwxNiAzOC44MzRsLTQtMi40di0zLjg2OGw0LjUxNS0yLjcxLTEuMDMtMS43MTNMMTIgMzAuMjMzdi0yLjYxNWw0Ljk1Ni0yLjQ3OEwyMSAyNy41NjZ2My44MTZsLTMuNDQ3IDEuNzIzLjg5NCAxLjc5IDMuNTU2LTEuNzc4TDI1IDM0LjYwMnY1LjY2N2wtNC41MzcgMi44ODcgMS4wNzQgMS42ODhMMzEgMzguODIydjEwLjYxMnptMjYuNDctMjUuNzQzLTUuNDQ2LTIuNzIzVjE3YzAtLjMzNC0uMTY3LS42NDYtLjQ0NS0uODMybC05LTZhMSAxIDAgMCAwLTEuMDAyLS4wNjNsLTUuNTUgMi43NzUtNS41NTctMi43NzVhMSAxIDAgMCAwLS45MzIuMDJsLTkgNUExIDEgMCAwIDAgMTYgMTZ2Ny4zODJsLTUuNDQ3IDIuNzIzYy0uMzM5LjE3LS41NTMuNTE2LS41NTMuODk1djEwYTEgMSAwIDAgMCAuNDg1Ljg1N0wxNSA0MC41NjZWNDdhMSAxIDAgMCAwIC41MjEuODc4bDExIDZhMSAxIDAgMCAwIC45OTQtLjAyMWw0LjUzLTIuNzE3IDUuNTA5IDIuNzU1YTEgMSAwIDAgMCAuOTYyLS4wMzhsMTAtNkExIDEgMCAwIDAgNDkgNDd2LTYuNDM0bDQuNTE0LTIuNzA5QTEgMSAwIDAgMCA1NCAzN1YyN2MwLS4zOC0uMjE0LS43MjUtLjU1My0uODk1Ii8+PC9nPjwvc3ZnPg==">SageMaker tool zoo</h2>
+  <div class="in">
+    <table class="kv">
+      <tr><td>Studio</td><td class="wrap">unified web IDE</td></tr>
+      <tr><td>Data Wrangler</td><td class="wrap">visual data prep + feature engineering (fix bias by balancing)</td></tr>
+      <tr><td>Feature Store</td><td class="wrap">central reusable features</td></tr>
+      <tr><td>Clarify</td><td class="wrap">bias detection + explainability + FM evaluation</td></tr>
+      <tr><td>Ground Truth</td><td class="wrap">human labeling + RLHF</td></tr>
+      <tr><td>Model Monitor</td><td class="wrap">production drift alerts</td></tr>
+      <tr><td>Model Registry</td><td class="wrap">version + approve models</td></tr>
+      <tr><td>Model Cards</td><td class="wrap">document model for audits</td></tr>
+      <tr><td>Model Dashboard</td><td class="wrap">all models, threshold violations</td></tr>
+      <tr><td>Pipelines</td><td class="wrap">CI/CD for ML</td></tr>
+      <tr><td>Role Manager</td><td class="wrap">persona-based access</td></tr>
+      <tr><td>JumpStart</td><td class="wrap">model hub, deploys in YOUR account</td></tr>
+      <tr><td>Canvas</td><td class="wrap">no-code ML (Autopilot AutoML)</td></tr>
+      <tr><td>AMT</td><td class="wrap">auto hyperparameter tuning</td></tr>
+      <tr><td>DeepAR</td><td class="wrap">time-series forecasting (RNN)</td></tr>
+    </table>
+    <p class="note">Network Isolation mode = no internet, not even S3. MLOps = version everything, automate, CI/CD, retrain, monitor.</p>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="rai" style="--c:var(--rai)">
+  <h2 class="dh">Responsible AI</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--rai)">
+  <h2>Responsible AI dimensions</h2>
+  <div class="in">
+    <p class="sm">Fairness · explainability · privacy and security · transparency · veracity and robustness · governance · safety · controllability.</p>
+    <div class="pair">
+      <b>Tools</b><span>Bedrock Guardrails + evaluation, Clarify, Data Wrangler (augment), Model Monitor, A2I, Model/AI Service Cards</span>
+      <b>Interpretability</b><span>high = linear regression, decision trees (overfit with many branches); low = neural nets; PDP explains black boxes</span>
+    </div>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--rai)">
+  <h2>Bias types</h2>
+  <div class="in">
+    <div class="pair">
+      <b>Sampling</b><span>data unrepresentative → fix with augmentation of imbalanced classes</span>
+      <b>Measurement</b><span>flawed collection tools</span>
+      <b>Observer</b><span>human interpreting data</span>
+      <b>Confirmation</b><span>favoring confirming info</span>
+    </div>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--rai)">
+  <h2>GenAI challenges + fixes</h2>
+  <div class="in">
+    <div class="pair">
+      <b>Toxicity</b><span>curate training data + guardrails</span>
+      <b>Hallucination</b><span>educate users, verify independently, mark unverified</span>
+      <b>Nondeterminism</b><span>same prompt, varied output</span>
+      <b>Plagiarism</b><span>detection tech emerging</span>
+    </div>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="security" style="--c:var(--sec)">
+  <h2 class="dh">Security + governance</h2>
+  <div class="flow">
+
+<section class="box" style="--c:var(--sec)">
+  <h2>Prompt attack vocabulary</h2>
+  <div class="in">
+    <div class="pair">
+      <b>Poisoning</b><span>malicious data in TRAINING set</span>
+      <b>Injection / hijacking</b><span>malicious instructions in the PROMPT</span>
+      <b>Exposure</b><span>sensitive training data revealed</span>
+      <b>Prompt leaking</b><span>model reveals its own prompt</span>
+      <b>Jailbreaking</b><span>bypass safety constraints</span>
+    </div>
+    <p class="note">Defense: instructions to ignore unrelated content + Guardrails + input sanitization.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--sec)">
+  <h2>GenAI security scoping matrix</h2>
+  <div class="in">
+    <p class="sm">Scope 1→5 = increasing ownership:</p>
+    <div class="pair">
+      <b>1</b><span>consumer app (ChatGPT)</span>
+      <b>2</b><span>enterprise app w/ GenAI (Q Developer)</span>
+      <b>3</b><span>pre-trained models (Bedrock base)</span>
+      <b>4</b><span>fine-tuned models</span>
+      <b>5</b><span>self-trained from scratch (SageMaker)</span>
+    </div>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--sec)">
+  <h2>Shared responsibility</h2>
+  <div class="in">
+    <div class="pair">
+      <b>AWS</b><span>security <b class="hl">OF</b> the cloud: infra, managed service internals</span>
+      <b>You</b><span>security <b class="hl">IN</b> the cloud: data, access, guardrails, encryption</span>
+      <b>Shared</b><span>patching, config mgmt, training</span>
+    </div>
+    <p class="note">Compliance: 140+ certs (ISO, SOC, HIPAA, GDPR, PCI DSS). Data never leaves a Region unless you move it.</p>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--sec)">
+  <h2>Security services</h2>
+  <div class="in">
+    <table class="kv">
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUlkZW50aXR5LWFuZC1BY2Nlc3MtTWFuYWdlbWVudF80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZGQzNDRjIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDQ3aDQwVjE4SDEyem00Mi0zMHYzMWExIDEgMCAwIDEtMSAxSDExYTEgMSAwIDAgMS0xLTFWMTdhMSAxIDAgMCAxIDEtMWg0MmExIDEgMCAwIDEgMSAxTTM1IDM5aDEydi0ySDM1em0xMC00aDR2LTJoLTR6bS0xMCAwaDZ2LTJoLTZ6bS0xMi41IDIuNWEuNS41IDAgMSAwIDEuMDAyLS4wMDIuNS41IDAgMCAwLTEuMDAyLjAwMm0zIDBhMi41IDIuNSAwIDAgMS0xLjUgMi4yODhWNDJoLTJ2LTIuMjEyYTIuNSAyLjUgMCAwIDEtMS41LTIuMjg4YzAtMS4zNzggMS4xMjEtMi41IDIuNS0yLjVzMi41IDEuMTIyIDIuNSAyLjVNMTYgNDIuOTk1IDI5Ljk5NSA0M2wuMDAxLTJIMjd2LTJoMi45OTdsLjAwMS0ySDI3di0yaDIuOTk5TDMwIDMzLjAwNSAxNi4wMDUgMzN6bTItMTEuOTk0IDEwLjAwMS4wMDMuMDAxLTUuMDA0YzAtMS4wMjQtLjgwMi0xLjcyNy0xLjI4LTIuMDU1LS44NzUtLjYtMi41NDgtLjk0NS0zLjcyLS45NDVIMjNjLTIuMTI3IDAtNC45OTcgMS4yMzItNC45OTggM3ptLTMuNzA3IDEzLjdhMSAxIDAgMCAxLS4yOTMtLjcwN0wxNC4wMDUgMzJhMSAxIDAgMCAxIDEtMUgxNmwuMDAyLTVjLjAwMS0zLjA4OSAzLjg3NC01IDYuOTk4LTVoLjAwMmMxLjU2NSAwIDMuNjUxLjQ3MyA0Ljg1MiAxLjI5NSAxLjM4NS45NTEgMi4xNDkgMi4yNjcgMi4xNDggMy43MDVsLS4wMDEgNS4wMDUuOTk5LjAwMWExIDEgMCAwIDEgMSAxTDMxLjk5NSA0NGExIDEgMCAwIDEtMSAxTDE1IDQ0Ljk5NGExIDEgMCAwIDEtLjcwNy0uMjkzTTQ3IDMwaDJ2LTJoLTJ6bS0xMiAwaDl2LTJoLTl6Ii8+PC9nPjwvc3ZnPg==">IAM</td><td class="wrap">users/groups/policies/roles; least privilege; roles for services</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLU1hY2llXzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiNkZDM0NGMiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNNDQuMjQyIDMzLjc1NGEzNjkgMzY5IDAgMCAwLTMuOTQzLTIuOTk0YzEuMjM5LTIuMTc1IDIuNjUtNC41ODIgMy4zNi01LjI5MiAyLjE2MyAxLjU2NyA3LjI3NSAxMC43MzQgOC4yMDQgMTMuODY1LTEuNjkxLTEuMDI3LTUuMDQxLTMuNTk4LTcuNjIxLTUuNTc5bS0xMi4zNTYgNi4yNDJjLS40ODItLjM3OC0xLjMyLTEuNTU2LTIuMjc3LTMuMDUybC42NTEtMS4wMjhjMS4zODEtMi4xOTMgMy42NS01Ljc5MiA0LjU1Ni02LjQ3OS41Mi4yMSAxLjU5My45MyAyLjg4NiAxLjg2NC0xLjcyMyAzLjAzNy00LjYzNyA4LjEyLTUuODE2IDguNjk1bS02LjMzMy0uNTk1Yy0uNTQyLS43MTItMS4zOTItMi4yMjYtMS45NDItMy4yMDgtMS42MjUtMi44OTgtMi4xODQtMy44MTYtMy4xMjMtMy44NDloLS4wNDZjLS43MjggMC0xLjQ3Mi42MDktNC40MDEgMy4yNTctLjg5LjgwNC0yLjExNiAxLjkxNC0zLjE0NSAyLjc2IDEuODItMy42NzcgNS44ODEtMTAuNzM2IDcuNDk3LTEyLjkzOC43NyAxLjEzMiAyLjE0IDMuNDk4IDMuMjg4IDUuNDg0IDEuNDU3IDIuNTE2IDIuNjIzIDQuNDg4IDMuNTc1IDYuMDI3LS42NTIgMS4wMS0xLjI4MyAxLjk1LTEuNzAzIDIuNDY3bTI3LjMtMy4wNTVjLTEuMDYyLTIuMzY3LTIuODIyLTUuNDkyLTQuNTkxLTguMTU0LTMuMTkzLTQuODAzLTQuMTM3LTQuODAzLTQuNjQ0LTQuODAzLTEuMjEgMC0yLjI4MSAxLjU0Ny00LjkzNiA2LjE4Ny0yLjE2My0xLjU1LTMuMjIxLTIuMTIzLTMuODk0LTIuMTQ2aC0uMDQ4Yy0xLjI4NyAwLTIuNTYzIDEuNzEyLTYuMTgyIDcuNDU0bC0uMTE2LjE4NGEyODQgMjg0IDAgMCAxLTMuMDItNS4xM2MtMy42Ni02LjMyLTQuMDc3LTYuOTA0LTQuOTY1LTYuOTM2LS42NDctLjAxNy0xLjE2Ni0uMDQzLTUuMjc3IDcuMDI1LTEuODggMy4yMzItNC4xMTcgNy4zNDUtNC44NzggOS4yNDgtLjI0MS42MDEtLjU3MSAxLjQyNC4wNzUgMS45NyAxLjEzLjk1NyAyLjY0Mi0uMjQzIDcuMDE5LTQuMi45NjktLjg3NiAyLjIyNS0yLjAxMyAyLjkwNy0yLjUyNy40MjEuNTk4IDEuMDg0IDEuNzggMS41NTYgMi42MjIgMS44NTggMy4zMTIgMi42MDMgNC40NzMgMy42NzMgNC41MDQuNzEuMDI1IDEuMzYxLS41NTEgMi44OTgtMi44NzRDMzAuMTA3IDQxLjI5IDMwLjk1OCA0MiAzMS43ODMgNDJoLjAxN2MxLjg3My0uMDIyIDMuODUtMy4wNjYgNy41MTYtOS41MTEgMS4yMzguOTI2IDIuNTQzIDEuOTI4IDMuNjk0IDIuODEgOC4zOSA2LjQ0MiA5LjU3OCA3LjEyIDEwLjU3MiA2LjA2LjcyOC0uNzguNTE3LTIuMjMzLS43My01LjAxMyIvPjwvZz48L3N2Zz4=">Macie</td><td class="wrap">find PII in S3</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUNvbmZpZ180ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZTcxNTdiIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTQ2LjA0NyAzOC4wMTggMS44OS41OTUtLjkxNCAzLjA0YS45OS45OSAwIDAgMS0xLjE3My42ODhsLTIuOTQ4LS43MTcuNDU4LTEuOTY4Ljk1OC4yMzNjLS42Ni0uODAxLTEuNjI4LTEuMzAyLTIuNjgzLTEuMzAyLTEuNzMgMC0zLjI5IDEuMjc4LTMuNjMgMi45NzNsLTEuOTM2LS40MDZjLjUyMy0yLjYxNyAyLjkxNi00LjU5IDUuNTY2LTQuNTkgMS42NzEgMCAzLjIuODAxIDQuMjI3IDIuMDcyem0tMS4wMDcgNS4xNTkgMS45MzYuNDA1Yy0uNTIyIDIuNjE2LTIuNjY5IDQuMzc1LTUuMzQgNC4zNzVhNS44NCA1Ljg0IDAgMCAxLTQuMi0xLjc2bC0uMDY5LjMzNS0xLjkzNC0uNDE4LjYwNi0yLjk0M2EuOTkuOTkgMCAwIDEgMS4xNjEtLjc4M2wyLjc4NS41Ny0uMzg3IDEuOTgzLS43NjEtLjE1NmMuNjg1LjcwOCAxLjY5MSAxLjE1IDIuNzk4IDEuMTUgMS43MzQgMCAzLjA3LTEuMDgzIDMuNDA1LTIuNzU4bTUuOTg0LjE5My0uNjg1LS4wNGEuOTkuOTkgMCAwIDAtMS4wMi43ODggOC4yIDguMiAwIDAgMS0xLjAyMyAyLjUyNyAxLjAzIDEuMDMgMCAwIDAgLjE3OCAxLjI5NWwuNTEyLjQ2Ny0xLjQ1IDEuNDgzLS40NTQtLjUyYS45Ny45NyAwIDAgMC0xLjI2NC0uMTgyIDcuOCA3LjggMCAwIDEtMi40NzQgMS4wNWMtLjQ3MS4xMDgtLjc5Ny41NS0uNzY5IDEuMDQ0bC4wMzkuNjk1aC0yLjA1bC4wMzktLjY5NmExLjAxIDEuMDEgMCAwIDAtLjc2OC0xLjA0NSA3LjggNy44IDAgMCAxLTIuNDczLTEuMDQ5Ljk3Ljk3IDAgMCAwLTEuMjY0LjE4MmwtLjQ1NC41MjEtMS40NS0xLjQ4My41MDktLjQ2NWMuMzYtLjMzLjQzNi0uODc3LjE3OC0xLjI5NWE4LjIgOC4yIDAgMCAxLTEuMDIzLTIuNTMgMS4wMSAxLjAxIDAgMCAwLTEuMDItLjc4N2wtLjY4NC4wNHYtMi4wOTlsLjY4OC4wNGMuNDU0LjAyNC45MTItLjMwNCAxLjAyLS43ODVBOC4xIDguMSAwIDAgMSAzNC44ODYgMzhhMS4wMyAxLjAzIDAgMCAwLS4xNzgtMS4yOTVsLS41MTUtLjQ3IDEuNDUtMS40ODUuNDYuNTI3YS45NzYuOTc2IDAgMCAwIDEuMjY0LjE4MiA3LjcgNy43IDAgMCAxIDIuNDY3LTEuMDQ1Yy40NzEtLjEwOS43OTctLjU1Ljc2OS0xLjA0NGwtLjAzOS0uNzA1aDIuMDVsLS4wMzkuNzA2Yy0uMDI4LjQ5My4yOTguOTM0Ljc2OSAxLjA0M2E3LjggNy44IDAgMCAxIDIuNDY3IDEuMDQ3Ljk3Ljk3IDAgMCAwIDEuMjY0LS4xODJsLjQ2LS41MjkgMS40NSAxLjQ4NC0uNTE0LjQ3YTEuMDMgMS4wMyAwIDAgMC0uMTc3IDEuMjk1Yy40OC43NzcuODI0IDEuNjI3IDEuMDI0IDIuNTI2LjEwNi40ODIuNTU0LjgxIDEuMDIuNzg3bC42ODYtLjA0em0xLjY2Ny0zLjkwNWEuOTcuOTcgMCAwIDAtLjczNi0uMjc0bC0uOTMuMDU0YTEwLjMgMTAuMyAwIDAgMC0uNjQtMS41NzhsLjY5Ny0uNjM2YTEuMDI0IDEuMDI0IDAgMCAwIC4wNC0xLjQ3bC0yLjkyOS0yLjk5OWEuOTMuOTMgMCAwIDAtLjcyNi0uMjk1Ljk3Ljk3IDAgMCAwLS43MS4zMzhsLS42MjQuNzE2YTkuNyA5LjcgMCAwIDAtMS41NC0uNjUzbC4wNTMtLjk1OGExLjAyIDEuMDIgMCAwIDAtLjI2Ny0uNzUyLjk4Ljk4IDAgMCAwLS43MTktLjMxNmgtNC4xNDJhLjk3Ljk3IDAgMCAwLS43MTguMzE2IDEuMDIgMS4wMiAwIDAgMC0uMjY4Ljc1MmwuMDUzLjk1N3EtLjc5OC4yNTgtMS41NC42NTJsLS42MjQtLjcxNWEuOTguOTggMCAwIDAtLjcxLS4zMzcuOTQuOTQgMCAwIDAtLjcyNi4yOTVsLTIuOTI5IDNhMS4wMjQgMS4wMjQgMCAwIDAgLjA0IDEuNDdsLjY5OS42MzZxLS4zODUuNzYtLjY0IDEuNTc3bC0uOTMzLS4wNTRhLjk4Ljk4IDAgMCAwLS43MzQuMjc0Yy0uMTk4LjE5MS0uMzEuNDU3LS4zMS43MzV2NC4yNDFhLjk5Ny45OTcgMCAwIDAgMS4wNDUgMS4wMWwuOTI3LS4wNTVxLjI1NS44MTguNjQgMS41ODFsLS42OTMuNjMzYTEuMDIgMS4wMiAwIDAgMC0uMzMuNzI2Yy0uMDA4LjI3OS4wOTcuNTQ4LjI5Ljc0NGwyLjkyOCAyLjk5OGEuOTQuOTQgMCAwIDAgLjcyNy4yOTcuOTguOTggMCAwIDAgLjcxLS4zMzhsLjYxOC0uNzFhMTAgMTAgMCAwIDAgMS41NDQuNjU2bC0uMDUyLjk0OGMtLjAxNi4yNzguMDgxLjU1LjI2OC43NTJhLjk3Ljk3IDAgMCAwIC43MTguMzE3aDQuMTQyYS45OC45OCAwIDAgMCAuNzE5LS4zMTdjLjE4Ni0uMjAyLjI4My0uNDc0LjI2Ny0uNzUybC0uMDUyLS45NDZhMTAgMTAgMCAwIDAgMS41NDctLjY1NmwuNjE2LjcwOGMuMTguMjA3LjQzNy4zMy43MS4zMzhhLjk4Ljk4IDAgMCAwIC43MjYtLjI5N2wyLjkzLTIuOTk4YTEuMDI0IDEuMDI0IDAgMCAwLS4wNDEtMS40N2wtLjY5NS0uNjM1cS4zODUtLjc2Mi42MzktMS41NzlsLjkzLjA1NWExIDEgMCAwIDAgLjczNS0uMjc0Yy4xOTctLjE5MS4zMDktLjQ1Ny4zMDktLjczNnYtNC4yNGMwLS4yNzktLjExMi0uNTQ1LS4zMS0uNzM2TTEyLjk3NiA0NC4zOUgyNy44djIuMDIzSDExLjk4OEExIDEgMCAwIDEgMTEgNDUuNDAydi0zNC4zOUExIDEgMCAwIDEgMTEuOTg4IDEwaDM1LjU3N2ExIDEgMCAwIDEgLjk4OCAxLjAxMXYxOC4yMDdoLTEuOTc3VjEyLjAyM2gtMzMuNnptMjQuNzA2LTIyLjI1M2gzLjk1M3YtMi4wMjNoLTMuOTUzem0uOTg5LTQuMDQ2aDEuOTc2di0yLjAyM2gtMS45NzZ6bTMuOTUzIDExLjEyNnYtNS4wNTdhMSAxIDAgMCAwIC45ODgtMS4wMTJ2LTQuMDQ2YTEgMSAwIDAgMC0uOTg4LTEuMDExdi0zLjAzNWExIDEgMCAwIDAtLjk4OS0xLjAxMWgtMy45NTNhMSAxIDAgMCAwLS45ODggMS4wMTF2My4wMzVhMSAxIDAgMCAwLS45ODggMS4wMTF2NC4wNDZhMSAxIDAgMCAwIC45ODggMS4wMTJ2NS4wNTdoMS45Nzd2LTUuMDU3aDEuOTc2djUuMDU3ek0yNi44MTIgMzAuMjNoMy45NTN2LTIuMDIzaC0zLjk1M3ptLjk4OC00LjA0NmgxLjk3NlYxNi4wNjlIMjcuOHptMy45NTMgOC4wOTJ2LTIuMDIzYTEgMSAwIDAgMCAuOTg4LTEuMDEydi00LjA0NmExIDEgMCAwIDAtLjk4OC0xLjAxMVYxNS4wNTdhMSAxIDAgMCAwLS45ODgtMS4wMTFoLTMuOTUzYTEgMSAwIDAgMC0uOTg4IDEuMDExdjExLjEyN2ExIDEgMCAwIDAtLjk4OSAxLjAxMXY0LjA0NmExIDEgMCAwIDAgLjk4OSAxLjAxMnY4LjA5MkgyNy44di04LjA5MmgxLjk3NnYyLjAyM3ptLTE0LjgyNCA0LjA0NmgxLjk3N1YyOC4yMDdoLTEuOTc3em0wLTE2LjE4NGgxLjk3N3YtNi4wNjloLTEuOTc3em0tLjk4OCA0LjA0NmgzLjk1M1YyNC4xNmgtMy45NTN6bTAgMTQuMTZoMy45NTNhMSAxIDAgMCAwIC45ODgtMS4wMVYyOC4yMDZhMSAxIDAgMCAwIC45ODktMS4wMTJWMjMuMTVhMSAxIDAgMCAwLS45ODktMS4wMTF2LTcuMDhhMSAxIDAgMCAwLS45ODgtMS4wMTJoLTMuOTUzYTEgMSAwIDAgMC0uOTg4IDEuMDExdjcuMDhhMSAxIDAgMCAwLS45ODggMS4wMTJ2NC4wNDZhMSAxIDAgMCAwIC45ODggMS4wMTJ2MTEuMTI2YTEgMSAwIDAgMCAuOTg4IDEuMDEyIi8+PC9nPjwvc3ZnPg==">Config</td><td class="wrap">config changes + compliance rules over time</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUluc3BlY3Rvcl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZGQzNDRjIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMwLjQ2NSAzMi45NWMwIDEuNjQxLTEuMzI0IDIuOTc2LTIuOTU0IDIuOTc2cy0yLjk1NS0xLjMzNS0yLjk1NS0yLjk3NSAxLjMyNC0yLjk3NiAyLjk1NS0yLjk3NmMxLjYzIDAgMi45NTQgMS4zMzUgMi45NTQgMi45NzZtLTEuMzczLTguMDcxYy0uODM5IDAtMS41Mi0uNjg3LTEuNTItMS41MzFzLjY4MS0xLjUzMSAxLjUyLTEuNTMxYy44MzggMCAxLjUxOS42ODcgMS41MTkgMS41MzFzLS42OCAxLjUzLTEuNTIgMS41M20tMS4yNzggMTQuNTk4Yy01Ljc3NSAwLTEwLjQ3My00LjczMi0xMC40NzMtMTAuNTQ3czQuNjk4LTEwLjU0NyAxMC40NzMtMTAuNTQ3IDEwLjQ3MiA0LjczMiAxMC40NzIgMTAuNTQ3YzAgMS40My0uMjg2IDIuNzkzLS44MDEgNC4wMzlsLTUuMDE0LS43MzRhNS4wNSA1LjA1IDAgMCAwLTIuMzQtMy41ODl2LTEuODQ4YTMuNjEgMy42MSAwIDAgMCAyLjU1OC0zLjQ0OWMwLTEuOTk2LTEuNjE0LTMuNjItMy41OTYtMy42Mi0xLjk4MyAwLTMuNTk3IDEuNjI0LTMuNTk3IDMuNjJhMy42MSAzLjYxIDAgMCAwIDIuNTU5IDMuNDQ5djEuMTQzYy0uMTgxLS4wMi0uMzU3LS4wNTYtLjU0My0uMDU2YTUgNSAwIDAgMC0zLjU4NiAxLjUyMWwtLjc3Mi0uNzlhNC43NyA0Ljc3IDAgMCAwLTEuNDQyLTYuNTYzbC0xLjA3OCAxLjY5MmEyLjc2IDIuNzYgMCAwIDEgMS4yNjUgMi4zM2MwIDEuNTI3LTEuMjM0IDIuNzctMi43NTMgMi43N3YyLjAxMWMuOTM5IDAgMS44MDctLjI4NCAyLjU0NC0uNzU4bDEuMTA5IDEuMTM1YTUgNSAwIDAgMC0uMzE4IDEuNzE4YzAgMi43OTMgMi4yNTcgNS4wNjYgNS4wMyA1LjA2NiAyLjI5OCAwIDQuMjItMS41NjkgNC44MTktMy42OTFsNC4wOS42Yy0xLjg5MyAyLjc0NS01LjA0MiA0LjU1LTguNjA2IDQuNTVtMC0yMy4xODNjLTYuOTIgMC0xMi41NSA1LjY2OS0xMi41NSAxMi42MzdzNS42MyAxMi42MzcgMTIuNTUgMTIuNjM3YzYuOTE5IDAgMTIuNTQ5LTUuNjY5IDEyLjU0OS0xMi42MzdzLTUuNjMtMTIuNjM3LTEyLjU0OS0xMi42MzdtMjMuNTQ4IDMzLjg4M2EyLjIxNCAyLjIxNCAwIDAgMS0zLjEzMS4xNjVsLTkuNDY0LTguNTk1YTE3IDE3IDAgMCAwIDIuOTUzLTMuMzE3bDkuNDc3IDguNTk1Yy45MDYuODI0Ljk3OSAyLjI0LjE2NSAzLjE1Mk0xMy4wNzYgMjguOTNjMC04LjE4MyA2LjYxLTE0Ljg0IDE0LjczNy0xNC44NCA4LjEyNSAwIDE0LjczNSA2LjY1NyAxNC43MzUgMTQuODRzLTYuNjEgMTQuODQtMTQuNzM1IDE0Ljg0LTE0LjczNy02LjY1Ny0xNC43MzctMTQuODRtMzkuNTEgMTYuNTQzLTkuNzk4LTguODg3YTE2LjkgMTYuOSAwIDAgMCAxLjgzNy03LjY1NmMwLTkuMzM2LTcuNTQzLTE2LjkzLTE2LjgxMi0xNi45M1MxMSAxOS41OTQgMTEgMjguOTNzNy41NDMgMTYuOTMgMTYuODEzIDE2LjkzYTE2LjYzIDE2LjYzIDAgMCAwIDkuMjc2LTIuODI0bDkuNzUyIDguODZhNC4yODcgNC4yODcgMCAwIDAgNi4wNjItLjMyIDQuMzU2IDQuMzU2IDAgMCAwLS4zMTctNi4xMDMiLz48L2c+PC9zdmc+">Inspector</td><td class="wrap">CVE scanning: EC2, ECR images, Lambda</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUNsb3VkVHJhaWxfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2U3MTU3YiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yMCA0MS45NzRoM1YzOS45NmgtM3ptMi00LjAyNmg2di0yLjAxM2gtNnptMjQuOTYtNy44ODRjLS4yMjYtMi4zMzUtMS40MDQtNC4wNS0zLjI0OC00LjY3Mi0xLjQ3NC0uNDk1LTMuMDgzLS4xOTMtNC4zNjEuNzQ0LS42ODUtMS40NDMtMS42NjMtMy4wMjQtMi42NDktNC4wMDMtMy4yMy0zLjIwOC02Ljk2MS0zLjk1OC0xMS4wODYtMi4yMjUtMy4zNTcgMS40MDQtNi4yMjcgNS41MDItNi41OCA5LjIzMi0xLjg0Ni42NTQtNC4wMjggMi4xMDEtNC45NjIgNC40MDFsMS44NTIuNzYxYy43MjctMS43OSAyLjY5NC0zLjAxMyA0LjMyMS0zLjQzMS40NDMtLjExNC43NTMtLjUxNi43NTMtLjk3NSAwLTMuMDc2IDIuNTY2LTYuOTUgNS4zODUtOC4xMyAzLjQwNC0xLjQzIDYuMjM4LS44NTcgOC45MTMgMS44IDEuMDYxIDEuMDUzIDIuMjM3IDMuMTk1IDIuNzYyIDQuNjU4YTEgMSAwIDAgMCAuNzkyLjY1NC45OC45OCAwIDAgMCAuOTQ3LS4zOWMuODE3LTEuMDk0IDIuMTMtMS41NyAzLjI3OS0xLjE4NiAxLjIyMi40MSAxLjkyMiAxLjcyMyAxLjkyMiAzLjYgMCAuNDkyLjM1NC45MTIuODM2Ljk5MiA0LjA5LjY4NSA2LjE2NCAyLjcyMSA2LjE2NCA2LjA1NCAwIDUuODMzLTUuMzg5IDYuMDM1LTYgNi4wMzlIMjlWNDZoMTdjMi43NjcgMCA4LTEuNjgzIDgtOC4wNTIgMC00LjEwNi0yLjQ5MS02Ljg4Mi03LjA0LTcuODg0TTIyIDQ2aDR2LTIuMDEzaC00em0zLTQuMDI2aDExVjM5Ljk2SDI1em0tMTQgMGg3VjM5Ljk2aC03em0yLTQuMDI2aDZ2LTIuMDEzaC02ek0xNCA0Nmg2di0yLjAxM2gtNnptLTQgMGgydi0yLjAxM2gtMnoiLz48L2c+PC9zdmc+">CloudTrail</td><td class="wrap">API call history - "who did this?"</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUFydGlmYWN0XzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiNkZDM0NGMiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzIgMTBjLTEyLjEzMSAwLTIyIDkuODY5LTIyIDIyIDAgOS44MDIgNi44ODggMTguNDI0IDE2Ljc1IDIwLjk2OGwuNS0xLjkzNkMxOC4yNzEgNDguNzE1IDEyIDQwLjg4OSAxMiAzMmMwLTExLjAyOCA4Ljk3Mi0yMCAyMC0yMHMyMCA4Ljk3MiAyMCAyMGMwIDkuNzc3LTQuOTUzIDE2Ljg5MS0xMy4yNSAxOS4wMzJsLjUgMS45MzZDNDguMzQ4IDUwLjYyMSA1NCA0Mi41ODYgNTQgMzJjMC0xMi4xMzEtOS44NjktMjItMjItMjJtLTYgMTRoN3YtMmgtN3ptMCAxMmg5di0yaC05em0wLTRoNXYtMmgtNXptMC00aDE0di0ySDI2em0xMS00YTEgMSAwIDAgMS0xLTF2LTUuMDQySDI0VjQwaDE4VjI0em0xLTJoMi41ODZMMzggMTkuNDE0em0tMS02LjA0MmMuMjYuMDAxLjUxNi4xNDQuNzA3LjMzNWw2IDZhMSAxIDAgMCAxIC4yODQuNzA3SDQ0djE4YTEgMSAwIDAgMS0xIDFIMjNhMSAxIDAgMCAxLTEtMVYxNi45NThhMSAxIDAgMCAxIDEtMXptMS43MDcgMzIuNzQ5LTUgNWEuOTk3Ljk5NyAwIDAgMS0xLjQxNCAwbC01LTVBMSAxIDAgMCAxIDI4IDQ3aDJ2LTNoMnY0YTEgMSAwIDAgMS0xIDFoLS41ODZMMzMgNTEuNTg2IDM1LjU4NiA0OUgzNWExIDEgMCAwIDEtMS0xdi00aDJ2M2gyYTEgMSAwIDAgMSAuNzA3IDEuNzA3Ii8+PC9nPjwvc3ZnPg==">Artifact</td><td class="wrap">download compliance reports (ISO, PCI, SOC)</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUF1ZGl0LU1hbmFnZXJfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2RkMzQ0YyIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im00OS43MDcgNDEuMjkzLTEuNDE0IDEuNDE0TDUwLjU4NiA0NUg0M3YyaDcuNTg2bC0yLjI5MyAyLjI5MyAxLjQxNCAxLjQxNCA0LTRhMSAxIDAgMCAwIDAtMS40MTR6TTI5IDQ3aDcuNTg2bC0yLjI5MyAyLjI5MyAxLjQxNCAxLjQxNCA0LTRhMSAxIDAgMCAwIDAtMS40MTRsLTQtNC0xLjQxNCAxLjQxNEwzNi41ODYgNDVIMjl6bS03LjI5MyAzLjcwNyA0LTRhMSAxIDAgMCAwIDAtMS40MTRsLTQtNC0xLjQxNCAxLjQxNEwyMi41ODYgNDVIMTV2Mmg3LjU4NmwtMi4yOTMgMi4yOTN6TTE1IDM3aDE0di0ySDE1em0wLTloMTR2LTJIMTV6bTE5IDBoNHYtMmgtNHptNS00YTEgMSAwIDAgMSAxIDF2NGExIDEgMCAwIDEtMSAxaC02YTEgMSAwIDAgMS0xLTF2LTRhMSAxIDAgMCAxIDEtMXptLTUgMTNoMTh2LTJIMzR6bTIwLTN2NGExIDEgMCAwIDEtMSAxSDMzYTEgMSAwIDAgMS0xLTF2LTRhMSAxIDAgMCAxIDEtMWgyMGExIDEgMCAwIDEgMSAxTTM4IDE3aDMuNTg2TDM4IDEzLjQxNHptNSAzM2gydjNhMSAxIDAgMCAxLTEgMUgxMWExIDEgMCAwIDEtMS0xVjExYTEgMSAwIDAgMSAxLTFoMjZjLjI2NiAwIC41MTkuMTA2LjcwNy4yOTNsNyA3QTEgMSAwIDAgMSA0NSAxOHYxM2gtMlYxOWgtNmExIDEgMCAwIDEtMS0xdi02SDEydjQwaDMxek0yMiAyM2ExIDEgMCAwIDEtLjcwNy0uMjkzbC0zLTMgMS40MTQtMS40MTRMMjIgMjAuNTg2bDUuMjkzLTUuMjkzIDEuNDE0IDEuNDE0LTYgNkExIDEgMCAwIDEgMjIgMjMiLz48L2c+PC9zdmc+">Audit Manager</td><td class="wrap">continuous audit vs GDPR/HIPAA/PCI/SOC 2 + evidence</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLVRydXN0ZWQtQWR2aXNvcl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZTcxNTdiIiBkPSJNMCAwaDQwdjQwSDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTE2LjQ2MSAxMS41OTIgMy4xOTctMS4wNjZ2MTAuNDM5Yy0yLjYzNi0uMjYxLTMuMTk3LTIuNTYxLTMuMTk3LTMuMjA1em03LjM5NSA2LjE2OGMwIC42NDQtLjU2MSAyLjk0NC0zLjE5OCAzLjIwNVYxMC41MjZsMy4xOTggMS4wNjZ6bS0zLjY5OCA0LjIzMWMzLjU0OSAwIDQuNjk4LTIuODUgNC42OTgtNC4yMzF2LTYuNTI4YS41LjUgMCAwIDAtLjM0Mi0uNDc0bC00LjE5OC0xLjRhLjUuNSAwIDAgMC0uMzE2IDBsLTQuMTk3IDEuNGEuNS41IDAgMCAwLS4zNDIuNDc0djYuNTI4YzAgMS4zODEgMS4xNDggNC4yMzEgNC42OTcgNC4yMzFtLTYuMDI5LTExLjc4NSA2LjAyOS0yLjE3NCA2LjAzIDIuMTc0djcuMDg4YzAgMS40MTQtLjQzNSA2LjAyOS02LjAzIDYuMDI5LTUuOTYxIDAtNi4wMjktNS43ODMtNi4wMjktNi4wMjl6bTYuMDI5IDE0LjExN2M2LjY5MSAwIDcuMDMtNS44NTUgNy4wMy03LjAyOVY5Ljg1NWEuNS41IDAgMCAwLS4zMzEtLjQ3TDIwLjMyOCA3LjAzYS41LjUgMCAwIDAtLjM0IDBsLTYuNTI5IDIuMzU1YS41LjUgMCAwIDAtLjMzLjQ3djcuNDM5YzAgMi40MzEgMS40NjkgNy4wMjkgNy4wMjkgNy4wMjltMTAuMDI3IDMuNjYzYTEuMTM0IDEuMTM0IDAgMCAxLTEuMTMyLTEuMTMyIDEuMTMzIDEuMTMzIDAgMSAxIDEuMTMyIDEuMTMybS04Ljg5NSAyLjEzMmMwIC42MjUtLjUwOCAxLjEzMy0xLjEzMiAxLjEzM2ExLjEzNCAxLjEzNCAwIDAgMSAwLTIuMjY1Yy42MjQgMCAxLjEzMi41MDggMS4xMzIgMS4xMzJtLTExLjE1OC0yLjEzMkExLjEzNCAxLjEzNCAwIDAgMSA5IDI2Ljg1NGMwLS42MjQuNTA4LTEuMTMyIDEuMTMyLTEuMTMyczEuMTMyLjUwOCAxLjEzMiAxLjEzMi0uNTA4IDEuMTMyLTEuMTMyIDEuMTMybTIwLjA1My0zLjI2NGMtLjUyOCAwLTEuMDA0LjItMS4zNzYuNTE3bC0xLjM4Ny0xLjM4OGExNC4zIDE0LjMgMCAwIDAgMy42NTEtNC42OTFsLS44OTgtLjQzOWMtMi4wNjQgNC4yMTItNS45OTUgNi45MzQtMTAuMDE3IDYuOTM0LTQuMTE3IDAtOC4zODgtMi44NTItMTAuMzg3LTYuOTM0bC0uODk5LjQzOWMuNzk4IDEuNjMxIDIuMDQ5IDMuMjY3IDMuNjQ0IDQuNTkzbC0xLjMxMiAxLjI2OWMtLjMxNi0uMTg2LS42OC0uMy0xLjA3Mi0uM0EyLjEzNCAyLjEzNCAwIDAgMCA4IDI2Ljg1NGMwIDEuMTc1Ljk1NiAyLjEzMiAyLjEzMiAyLjEzMmEyLjEzNSAyLjEzNSAwIDAgMCAyLjEzMi0yLjEzMmMwLS40Mi0uMTI2LS44MDktLjMzNy0xLjE0bDEuMzkxLTEuMzQ2YzEuNzk0IDEuMjgzIDMuOTUxIDIuMTU1IDYuMzQgMi4yNjV2MS40MThhMi4xMyAyLjEzIDAgMCAwLTEuNjMyIDIuMDY3YzAgMS4xNzYuOTU2IDIuMTMzIDIuMTMyIDIuMTMzYTIuMTM1IDIuMTM1IDAgMCAwIDIuMTMyLTIuMTMzYzAtMS4wMDMtLjY5OC0xLjg0LTEuNjMyLTIuMDY3di0xLjQxN2MyLjEwNi0uMTA2IDQuMTY0LS44NzUgNS45NjktMi4xNjVsMS41ODQgMS41ODdhMi4xIDIuMSAwIDAgMC0uMTU4Ljc5OGMwIDEuMTc1Ljk1NiAyLjEzMiAyLjEzMiAyLjEzMmEyLjEzNCAyLjEzNCAwIDAgMCAyLjEzMS0yLjEzMiAyLjEzNCAyLjEzNCAwIDAgMC0yLjEzMS0yLjEzMiIvPjwvZz48L3N2Zz4=">Trusted Advisor</td><td class="wrap">account checks: cost, perf, security, limits</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUtleS1NYW5hZ2VtZW50LVNlcnZpY2VfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2RkMzQ0YyIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi44NCA0MS45OTdoNnYtMmgtNnptLTggMGg2di0yaC02em0tOCAwaDZ2LTJoLTZ6bTEwLTYuNWExLjUwMSAxLjUwMSAwIDEgMSAxLjUgMS41Yy0uODI2IDAtMS41LS42NzMtMS41LTEuNW01IDBjMC0xLjkzLTEuNTctMy41LTMuNS0zLjUtMS45MjggMC0zLjUgMS41Ny0zLjUgMy41czEuNTcyIDMuNSAzLjUgMy41YzEuOTMgMCAzLjUtMS41NyAzLjUtMy41bS0xMS41IDEuNWMtLjgyNiAwLTEuNS0uNjczLTEuNS0xLjVzLjY3NC0xLjUgMS41LTEuNWExLjUwMSAxLjUwMSAwIDAgMSAwIDNtMC01Yy0xLjkyOCAwLTMuNSAxLjU3LTMuNSAzLjVzMS41NzIgMy41IDMuNSAzLjVjMS45MyAwIDMuNS0xLjU3IDMuNS0zLjVzLTEuNTctMy41LTMuNS0zLjVtMjMuNS02djIwYTEgMSAwIDAgMS0xIDFoLTI2di0yaDI1di0xOGgtMTl2LTJoMjBhMSAxIDAgMCAxIDEgMW0tMzIuOTM2LTIuMTA1YTEuOTggMS45OCAwIDAgMS0xLjk4LTEuOThjMC0xLjA5Ljg4OS0xLjk3OCAxLjk4LTEuOTc4YTEuOTggMS45OCAwIDAgMSAxLjk3OCAxLjk3OSAxLjk4IDEuOTggMCAwIDEtMS45NzggMS45NzltMC01Ljk1OGEzLjk4NCAzLjk4NCAwIDAgMC0zLjk4IDMuOTc5IDMuOTg0IDMuOTg0IDAgMCAwIDMuOTggMy45NzkgMy45ODMgMy45ODMgMCAwIDAgMy45NzgtMy45OCAzLjk4MyAzLjk4MyAwIDAgMC0zLjk3OC0zLjk3OG0yLjYzIDEyLjExMmExIDEgMCAwIDAtLjY5My45NXYxOC41OGwtMS45NCAxLjktMi4wNi0yLjgwN3YtMi42M2ExIDEgMCAwIDAtLjM1MS0uNzYxbC0yLjEwNi0xLjc5MiAyLjEwNi0xLjc5MWMuMjIzLS4xOS4zNS0uNDcuMzUtLjc2MlYzOS4yM2MwLS4yOTMtLjEyNy0uNTcyLS4zNS0uNzYybC0yLjEwNi0xLjc5MSAyLjEwNi0xLjc5MmMuMjIzLS4xOS4zNS0uNDcuMzUtLjc2MnYtMy4xMjdhMSAxIDAgMCAwLS42OTctLjk1M2MtNC4zOC0xLjM4OC02Ljg4Ni01LjY1My01Ljk1OC0xMC4xNDIuNjctMy4yNDYgMy4xNjYtNS44NDggNi4zNTktNi42MzEgMi43MTgtLjY2OCA1LjUwOS0uMDg1IDcuNjUyIDEuNTk2YTguNzQgOC43NCAwIDAgMSAzLjM2OSA2LjkxNyA4LjY3IDguNjcgMCAwIDEtNi4wMzEgOC4yNjJtOC4wMy04LjI2MmExMC43MyAxMC43MyAwIDAgMC00LjEzNC04LjQ5MWMtMi42MjgtMi4wNjItNi4wNC0yLjc4LTkuMzYzLTEuOTY0LTMuOTM3Ljk2NS03LjAxNSA0LjE3LTcuODQxIDguMTY4YTEwLjc1IDEwLjc1IDAgMCAwIDYuNjE1IDEyLjIwNnYxLjk2bC0yLjY0OCAyLjI1M2ExLjAwMiAxLjAwMiAwIDAgMCAwIDEuNTIzbDIuNjQ4IDIuMjU0di43NzhsLTIuNjQ4IDIuMjU0YTEgMSAwIDAgMCAwIDEuNTIzTDE2Ljg0IDQ2LjV2Mi40OTZjMCAuMjEzLjA2OS40Mi4xOTUuNTkybDIuOTM2IDRhMSAxIDAgMCAwIC44MDYuNDA4IDEgMSAwIDAgMCAuNjk5LS4yODZsMy4wNjQtM2ExIDEgMCAwIDAgLjMtLjcxNHYtMTguM2ExMC42NiAxMC42NiAwIDAgMCA2LjcyNC05LjkxMyIvPjwvZz48L3N2Zz4=">KMS</td><td class="wrap">encryption keys; Bedrock + encrypted S3 = IAM role with S3 access AND KMS decrypt</td></tr>
+      <tr><td><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLVByaXZhdGVMaW5rXzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiM4YzRmZmYiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzMuNTIyIDMyLjczN0MzNC40NzUgMzMuNzk2IDM1IDM1LjEzIDM1IDM2LjQ5NWMwIDMuMjAzLTIuMjQ0IDUuNTI2LTUuMzMzIDUuNTI2aC02LjIyM2MtMy4xMDQgMC01LjQ0NC0yLjM3NS01LjQ0NC01LjUyNiAwLTMuMTM3IDIuMjktNS40MTUgNS40NDQtNS40MTVoMy4xMTF2MS45OWgtMy4xMTFjLTIuMDI4IDAtMy40NDQgMS40MDgtMy40NDQgMy40MjUgMCAyLjA0OSAxLjQ0OCAzLjUzNyAzLjQ0NCAzLjUzN2g2LjIyM2MxLjk2MiAwIDMuMzMzLTEuNDU0IDMuMzMzLTMuNTM3IDAtLjg3NC0uMzQ0LTEuNzM4LS45NjgtMi40M3pNNDUgMzUuMDZjMCAzLjczNi0zLjA1MSA1Ljk2OC02IDUuOTY4aC0zLjExMnYtMS45OUgzOWMxLjk2NSAwIDQtMS40ODggNC0zLjk3OHMtMi4wMzUtMy45NzktNC0zLjk3OWgtNi4yMjNjLTIuMDEzIDAtMy43NzcgMS44MDctMy43NzcgMy44NjggMCAuNTMuMzY0IDEuMTUzLjY4NCAxLjcwNGwuMDcuMTItMS43MzIuOTk0LS4wNjctLjExNmMtLjQyNi0uNzMtLjk1NS0xLjYzNy0uOTU1LTIuNzAyIDAtMy4xMiAyLjY5OS01Ljg1NyA1Ljc3Ny01Ljg1N0gzOWMyLjk0OSAwIDYgMi4yMzIgNiA1Ljk2OG0uNDM5IDguOTUySDE4LjU2MWMtMy41NDQtLjAwMy02LjM1OS0yLjUwOC02LjU0OS01LjgyNmE4IDggMCAwIDEtLjAxMi0uNDY4YzAtNC4yNDkgMy4wNTktNS42ODMgNC45MzgtNi4xNjJsLjA1NS0uMDExYS45OTMuOTkzIDAgMCAwIC43Ny0xLjA5NCA5IDkgMCAwIDEtLjA3MS0xLjE1M2MwLTMuNDcgMi40OTgtNy4yMDcgNS42ODctOC41MDUgNS41NDgtMi4yNTkgOS40OC43MSAxMC45MTMgMi4wOSAxLjE2MyAxLjEyMSAyLjA3MSAyLjU1NiAyLjY5OSA0LjI2NGExLjAwNCAxLjAwNCAwIDAgMCAxLjczNC4yNjNjLjg5OS0xLjE3IDIuMzUtMS42NjEgMy43MDQtMS4yNTEgMS42MTIuNDg5IDIuNjE0IDIuMDcyIDIuNzUxIDQuMzQzLjAyOC40NS4zNTYuODI3LjgwMS45MTVDNDkuOTc0IDMyLjIxOCA1MiAzNC4zNTggNTIgMzcuNzhjMCA1LjQyMS00LjExMSA2LjIzLTYuNTYxIDYuMjNtMS42NjMtMTQuMzgxYy0uMzc2LTIuNzE4LTEuODY5LTQuNy00LjA4OS01LjM3NGE1LjMzIDUuMzMgMCAwIDAtNC43MzIuODJjLS42NzktMS4zOTctMS41NDktMi42MTItMi41OTctMy42MjItMy41NzEtMy40NDUtOC40NTQtNC4zOC0xMy4wNjItMi41MDMtMy45NTEgMS42MDktNi45MyA2LjA1Ny02LjkzIDEwLjM0NnEwIC4yNzYuMDEzLjU0OUMxMy41MTcgMzAuNTggMTAgMzIuNTY2IDEwIDM3LjcxN3EwIC4yOTkuMDE2LjU4Yy4yNDkgNC4zODcgMy45MjIgNy42OTkgOC41NDQgNy43MDNoMjYuODc5QzQ3LjQ0NyA0NiA1NCA0NS40MDcgNTQgMzcuNzhjMC00LjE1NS0yLjQ0Mi03LjAyNi02Ljg5OC04LjE1Ii8+PC9nPjwvc3ZnPg==">VPC endpoint</td><td class="wrap">PrivateLink = reach Bedrock/SageMaker/S3 with NO public internet</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--sec)">
+  <h2><img class="ic" alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUJlZHJvY2tfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik01MSAzMWExLjAwMSAxLjAwMSAwIDAgMSAwLTIgMS4wMDEgMS4wMDEgMCAwIDEgMCAyTTI2Ljk3NyA1MS44NDhsLTMuMjAzLTEuNzQ2IDMuNzQxLTIuMjQ1LTEuMDMtMS43MTQtNC43NDcgMi44NDhMMTcgNDYuNDA2di01Ljg0bDQuNTE1LTIuNzEtMS4wMy0xLjcxM0wxNiAzOC44MzNsLTQtMi40di0zLjgxNWw1LjQ0Ny0yLjcyMy0uODk0LTEuNzlMMTIgMzAuMzgydi0yLjc2NGw0Ljk1Ni0yLjQ3OEwyMSAyNy41NjZ2Mi44MTZsLTMuNDQ3IDEuNzIzLjg5NCAxLjc5IDMuNTU2LTEuNzc4IDMuNTU0IDEuNzYuODg2LTEuNzkyTDIzIDMwLjM4di0yLjgxNGw0LjUxNS0yLjcxQTEgMSAwIDAgMCAyOCAyNHYtNWgtMnY0LjQzNGwtNCAyLjQtNC0yLjR2LTYuODQ2bDMtMS42NjZWMjFoMnYtNy4xOWwzLjAyNC0xLjY4IDQuOTc4IDIuNDg2LS4wMDEgMjEuODM0LTEwLjUzOCA2LjcwNiAxLjA3NCAxLjY4OCA5LjQ2NC02LjAyMkwzMSA0OS40MzR6TTQ4IDM5YTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtLTggMTBhMS4wMDEgMS4wMDEgMCAwIDEgMC0yIDEuMDAxIDEuMDAxIDAgMCAxIDAgMm0yLTMzYTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtOSAxMWEzIDMgMCAwIDAtMi44MTYgMkgzMy4wMDF2LTRINDJhMSAxIDAgMCAwIDEtMXYtNC4xODRBMyAzIDAgMCAwIDQ1IDE3YzAtMS42NTQtMS4zNDYtMy0zLTNzLTMgMS4zNDYtMyAzYzAgMS4zMDIuODM5IDIuNDAyIDIgMi44MTZWMjNoLTcuOTk5bC4wMDEtOS4wMDJhMSAxIDAgMCAwLS41NTMtLjg5NGwtNi4wMDItM2ExIDEgMCAwIDAtLjkzMi4wMjJsLTkgNUExIDEgMCAwIDAgMTYgMTZ2Ny4zODJsLTUuNDQ3IDIuNzIzYy0uMzM5LjE3LS41NTMuNTE2LS41NTMuODk1djEwYTEgMSAwIDAgMCAuNDg1Ljg1N0wxNSA0MC41NjZWNDdhMSAxIDAgMCAwIC41MjEuODc4bDExIDZhMSAxIDAgMCAwIC45OTQtLjAyMWw1LTNBMSAxIDAgMCAwIDMzIDUwdi03aDZ2Mi4xODRBMyAzIDAgMCAwIDM3IDQ4YzAgMS42NTQgMS4zNDYgMyAzIDNzMy0xLjM0NiAzLTNhMyAzIDAgMCAwLTItMi44MTZWNDJhMSAxIDAgMCAwLTEtMWgtN2wuMDAxLTRoMTAuNTg1bDEuNzE1IDEuNzE1QTIuOTUgMi45NSAwIDAgMCA0NSA0MGMwIDEuNjU0IDEuMzQ2IDMgMyAzczMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zYTIuOTUgMi45NSAwIDAgMC0xLjI4NS4zbC0yLjAwOC0yLjAwN0ExIDEgMCAwIDAgNDQgMzVIMzMuMDAxdi00aDE1LjE4M0EzIDMgMCAwIDAgNTEgMzNjMS42NTQgMCAzLTEuMzQ2IDMtM3MtMS4zNDYtMy0zLTMiLz48L2c+PC9zdmc+">Secure Bedrock architecture</h2>
+  <div class="in">
+    <figure>
+      <svg class="dg" role="img" aria-label="An app in a private subnet reaches Bedrock through a VPC endpoint over PrivateLink; Bedrock reads KMS-encrypted training data from S3 through an IAM role, and every API call is recorded in CloudTrail" viewBox="0 0 620 252">
+        <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5e6b80"/></marker></defs>
+        <rect x="8" y="14" width="268" height="150" rx="10" fill="none" stroke="#4f46e5" stroke-dasharray="6 4" stroke-opacity="0.55"/>
+        <text x="20" y="36" class="lab">VPC · private subnet</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUVDMl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZWQ3MTAwIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIyIDQxaDE5VjIzSDIyem0yMS0xOGgzdjJoLTN2MmgzdjJoLTN2MmgzdjJoLTN2M2gzdjJoLTN2MmgzdjJoLTMuMTM3Yy0uMjU1LjU4Ny0uODQgMS0xLjUxOSAxSDQxdjNoLTJ2LTNoLTJ2M2gtMnYtM2gtMnYzaC0ydi0zaC0ydjNoLTJ2LTNoLTN2M2gtMnYtM2gtLjM0NGExLjY2IDEuNjYgMCAwIDEtMS41MTktMUgxOHYtMmgydi0yaC0ydi0yaDJ2LTNoLTJ2LTJoMnYtMmgtMnYtMmgydi0yaC0ydi0yaDJ2LS4zNDRjMC0uOTEzLjc0My0xLjY1NiAxLjY1Ni0xLjY1NkgyMnYtM2gydjNoM3YtM2gydjNoMnYtM2gydjNoMnYtM2gydjNoMnYtM2gydjNoLjM0NGMuOTEzIDAgMS42NTYuNzQzIDEuNjU2IDEuNjU2ek0zMiA1MkgxMlYzMmg0di0yaC00LjE1N0ExLjg0NSAxLjg0NSAwIDAgMCAxMCAzMS44NDN2MjAuMzE0YzAgMS4wMTYuODI2IDEuODQzIDEuODQzIDEuODQzaDIwLjMxNEExLjg0NSAxLjg0NSAwIDAgMCAzNCA1Mi4xNTdWNDhoLTJ6bTIyLTQwLjE1N3YyMC4zMTRBMS44NDUgMS44NDUgMCAwIDEgNTIuMTU3IDM0SDQ4di0yaDRWMTJIMzJ2NGgtMnYtNC4xNTdjMC0xLjAxNi44MjYtMS44NDMgMS44NDMtMS44NDNoMjAuMzE0YzEuMDE3IDAgMS44NDMuODI3IDEuODQzIDEuODQzIi8+PC9nPjwvc3ZnPg==" x="28" y="66" width="46" height="46"/>
+        <text x="51" y="130" text-anchor="middle" class="lab">your app</text>
+        <line x1="82" y1="89" x2="158" y2="89" marker-end="url(#ar2)"/>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHRpdGxlPkljb24tUmVzb3VyY2UvTmV0d29ya2luZy1hbmQtQ29udGVudC1EZWxpdmVyeS9SZXNfQW1hem9uLVZQQ19FbmRwb2ludHNfNDg8L3RpdGxlPjxwYXRoIGZpbGw9IiM4YzRmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0ibTIwLjYyIDI3LjYwMiAxLjQxNCAxLjQxMyA0LjM2My00LjM2NGExIDEgMCAwIDAgMC0xLjQxM2wtNC4zNjMtNC4zNjQtMS40MTQgMS40MTUgMi42NTYgMi42NTZINi40OXYyaDE2Ljc4NnptMjMuMjctMy42NTdDNDMuODkgMTIuOTQ4IDM0Ljk0MiA0IDIzLjk0NSA0UzQgMTIuOTQ4IDQgMjMuOTQ1czguOTQ3IDE5Ljk0NCAxOS45NDUgMTkuOTQ0YzEwLjk5NyAwIDE5Ljk0NS04Ljk0NiAxOS45NDUtMTkuOTQ0bTIgMGMwIDEyLjEtOS44NDQgMjEuOTQ0LTIxLjk0NSAyMS45NDRDMTEuODQ1IDQ1Ljg5IDIgMzYuMDQ1IDIgMjMuOTQ2IDIgMTEuODQ0IDExLjg0NSAyIDIzLjk0NSAyUzQ1Ljg5IDExLjg0NCA0NS44OSAyMy45NDVtLTI5LjkyNyAyLjYxN3YuNDU0cTAgLjA5LjAxNS4xNzljLjA2NC4zNDkgMS42MTkgOC41NjMgNy45NjcgOC41NjNzNy45MDMtOC4yMTUgNy45NjYtOC41NjRhMSAxIDAgMCAwIC4wMTYtLjE3N1YxNi40NjZhMSAxIDAgMCAwLS42MjctLjkyOGwtNi45ODItMi44MWExIDEgMCAwIDAtLjc0NiAwbC02Ljk4MiAyLjgxYTEgMSAwIDAgMC0uNjI3LjkyN3Y0Ljg2MWgydi00LjE4NGw1Ljk4Mi0yLjQwOCA1Ljk4MiAyLjQwOHY5Ljc3NmMtLjE2Mi43NzEtMS41OCA2Ljg0LTUuOTgyIDYuODRzLTUuODItNi4wNjktNS45ODItNi44NHYtLjM1NXptMTkuNDU0LTEzLjIzN3YxMy4zNWMwIDQuNTMyLTIuMzk4IDEzLjEwNi0xMS40NzIgMTMuMTA2LTQuNzIyIDAtOC4yMTEtMi40NDMtMTAuMDkxLTcuMDY0LTEtMi40NS0xLjI3Ny00Ljg2OC0xLjM1My02LjA5MmwxLjk5Ni0uMTI1Yy4wNTYuODg3LjI4NCAzLjE5NSAxLjIxIDUuNDYyIDEuNTcgMy44NjIgNC4zNDIgNS44MTkgOC4yMzggNS44MTkgOS4zMzUgMCA5LjQ3LTEwLjY1MyA5LjQ3Mi0xMS4xMDZWMTMuOTk4bC05LjQ3Mi0zLjgxMkwxNC40NzMgMTR2Ny4zMjZoLTJ2LTguMDAxYTEgMSAwIDAgMSAuNjI2LS45MjhMMjMuNTcyIDguMThjLjIzOC0uMDk2LjUwOC0uMDk2Ljc0NiAwbDEwLjQ3MiA0LjIxNmExIDEgMCAwIDEgLjYyNy45MjgiLz48L3N2Zz4=" x="162" y="66" width="46" height="46"/>
+        <text x="185" y="130" text-anchor="middle" class="lab">VPC endpoint</text>
+        <line x1="216" y1="89" x2="348" y2="89" marker-end="url(#ar2)"/>
+        <text x="283" y="78" text-anchor="middle" class="lab">PrivateLink</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUJlZHJvY2tfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzAxYTg4ZCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik01MSAzMWExLjAwMSAxLjAwMSAwIDAgMSAwLTIgMS4wMDEgMS4wMDEgMCAwIDEgMCAyTTI2Ljk3NyA1MS44NDhsLTMuMjAzLTEuNzQ2IDMuNzQxLTIuMjQ1LTEuMDMtMS43MTQtNC43NDcgMi44NDhMMTcgNDYuNDA2di01Ljg0bDQuNTE1LTIuNzEtMS4wMy0xLjcxM0wxNiAzOC44MzNsLTQtMi40di0zLjgxNWw1LjQ0Ny0yLjcyMy0uODk0LTEuNzlMMTIgMzAuMzgydi0yLjc2NGw0Ljk1Ni0yLjQ3OEwyMSAyNy41NjZ2Mi44MTZsLTMuNDQ3IDEuNzIzLjg5NCAxLjc5IDMuNTU2LTEuNzc4IDMuNTU0IDEuNzYuODg2LTEuNzkyTDIzIDMwLjM4di0yLjgxNGw0LjUxNS0yLjcxQTEgMSAwIDAgMCAyOCAyNHYtNWgtMnY0LjQzNGwtNCAyLjQtNC0yLjR2LTYuODQ2bDMtMS42NjZWMjFoMnYtNy4xOWwzLjAyNC0xLjY4IDQuOTc4IDIuNDg2LS4wMDEgMjEuODM0LTEwLjUzOCA2LjcwNiAxLjA3NCAxLjY4OCA5LjQ2NC02LjAyMkwzMSA0OS40MzR6TTQ4IDM5YTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtLTggMTBhMS4wMDEgMS4wMDEgMCAwIDEgMC0yIDEuMDAxIDEuMDAxIDAgMCAxIDAgMm0yLTMzYTEuMDAxIDEuMDAxIDAgMCAxIDAgMiAxLjAwMSAxLjAwMSAwIDAgMSAwLTJtOSAxMWEzIDMgMCAwIDAtMi44MTYgMkgzMy4wMDF2LTRINDJhMSAxIDAgMCAwIDEtMXYtNC4xODRBMyAzIDAgMCAwIDQ1IDE3YzAtMS42NTQtMS4zNDYtMy0zLTNzLTMgMS4zNDYtMyAzYzAgMS4zMDIuODM5IDIuNDAyIDIgMi44MTZWMjNoLTcuOTk5bC4wMDEtOS4wMDJhMSAxIDAgMCAwLS41NTMtLjg5NGwtNi4wMDItM2ExIDEgMCAwIDAtLjkzMi4wMjJsLTkgNUExIDEgMCAwIDAgMTYgMTZ2Ny4zODJsLTUuNDQ3IDIuNzIzYy0uMzM5LjE3LS41NTMuNTE2LS41NTMuODk1djEwYTEgMSAwIDAgMCAuNDg1Ljg1N0wxNSA0MC41NjZWNDdhMSAxIDAgMCAwIC41MjEuODc4bDExIDZhMSAxIDAgMCAwIC45OTQtLjAyMWw1LTNBMSAxIDAgMCAwIDMzIDUwdi03aDZ2Mi4xODRBMyAzIDAgMCAwIDM3IDQ4YzAgMS42NTQgMS4zNDYgMyAzIDNzMy0xLjM0NiAzLTNhMyAzIDAgMCAwLTItMi44MTZWNDJhMSAxIDAgMCAwLTEtMWgtN2wuMDAxLTRoMTAuNTg1bDEuNzE1IDEuNzE1QTIuOTUgMi45NSAwIDAgMCA0NSA0MGMwIDEuNjU0IDEuMzQ2IDMgMyAzczMtMS4zNDYgMy0zLTEuMzQ2LTMtMy0zYTIuOTUgMi45NSAwIDAgMC0xLjI4NS4zbC0yLjAwOC0yLjAwN0ExIDEgMCAwIDAgNDQgMzVIMzMuMDAxdi00aDE1LjE4M0EzIDMgMCAwIDAgNTEgMzNjMS42NTQgMCAzLTEuMzQ2IDMtM3MtMS4zNDYtMy0zLTMiLz48L2c+PC9zdmc+" x="352" y="66" width="46" height="46"/>
+        <text x="375" y="130" text-anchor="middle" class="lab">Bedrock</text>
+        <line x1="406" y1="78" x2="524" y2="40" marker-end="url(#ar2)"/>
+        <text x="462" y="46" text-anchor="middle" class="lab">IAM role</text>
+        <line x1="406" y1="89" x2="524" y2="118" marker-end="url(#ar2)"/>
+        <text x="462" y="116" text-anchor="middle" class="lab">KMS decrypt</text>
+        <line x1="406" y1="100" x2="524" y2="198" marker-end="url(#ar2)"/>
+        <text x="448" y="172" text-anchor="middle" class="lab">API events</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVNpbXBsZS1TdG9yYWdlLVNlcnZpY2VfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzdhYTExNiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im00Ny43NTkgMzMuOTQ4LjIzNC0xLjgxN2MyLjE3MyAxLjI1NCAyLjg0OSAxLjk5IDMuMDQ0IDIuMjkzLS4zMjQuMDYxLTEuMjA1LjA4NS0zLjI3OC0uNDc2TTMwLjQ5OSAyMWMtMTAuMzc0IDAtMTcuMTE3LTIuNTEyLTE3LjUtNC4zMDR2LS4xODVjLjM1LTEuMTE5IDYuMTQtNC41MSAxNy41LTQuNTEgMTEuMzQgMCAxNy4xMzMgMy4zOCAxNy41IDQuNTA0di4xMTFDNDcuNzI1IDE4LjQ0NiA0MC45NjIgMjEgMzAuNSAyMW0xNS4zMTkgMTIuMzYyYy00Ljc2NS0xLjU2NS0xMC45MDYtNC4zODMtMTMuMjI0LTUuNDc0YTIuMDkgMi4wOSAwIDAgMC0yLjA4Mi0xLjk4MkEyLjA5NyAyLjA5NyAwIDAgMCAyOC40MTggMjhjMCAxLjE1NC45NCAyLjA5NCAyLjA5NCAyLjA5NC40NTcgMCAuODc3LS4xNTIgMS4yMi0uNCAyLjQgMS4xMjggOC44ODcgNC4xMDQgMTMuODI2IDUuNjg2bC0xLjcyMSAxMy4zNDRDNDMuNTgzIDUwLjM1MiAzOC45MTkgNTIgMzAuNDk3IDUyYy04LjQyNSAwLTEzLjA5Mi0xLjY0OC0xMy4zNDItMy4yNDlsLTMuNzItMjguOTM3QzE2Ljk0NSAyMS45MTUgMjMuNzQ5IDIzIDMwLjUgMjNjNi43NSAwIDEzLjU1NC0xLjA4NSAxNy4wNjUtMy4xODV6TTUwIDE2LjVjMC0zLjA2OS04LjM0LTYuNS0xOS41LTYuNVMxMSAxMy40MzEgMTEgMTYuNXYuNTQzbDQuMTc0IDMxLjk5QzE1Ljg3NCA1My41MTYgMjYuMTIzIDU0IDMwLjQ5NyA1NGM0LjM3MiAwIDE0LjYxNi0uNDg0IDE1LjMyLTQuOTkzbDEuNjg0LTEzLjA2YzEuMjc3LjMzMiAyLjMxLjUxIDMuMTE1LjUwOC45OSAwIDEuNjU3LS4yNTIgMi4wOC0uNzU4LjM1LS40MTYuNDg5LS45NC4zODktMS40NzYtLjIyOC0xLjIyLTEuNjgyLTIuNTA5LTQuNzE1LTQuMTc3bC0uMS0uMDU1TDUwIDE3LjA0NHoiLz48L2c+PC9zdmc+" x="530" y="14" width="42" height="42"/>
+        <text x="551" y="70" text-anchor="middle" class="lab">training data</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUtleS1NYW5hZ2VtZW50LVNlcnZpY2VfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2RkMzQ0YyIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi44NCA0MS45OTdoNnYtMmgtNnptLTggMGg2di0yaC02em0tOCAwaDZ2LTJoLTZ6bTEwLTYuNWExLjUwMSAxLjUwMSAwIDEgMSAxLjUgMS41Yy0uODI2IDAtMS41LS42NzMtMS41LTEuNW01IDBjMC0xLjkzLTEuNTctMy41LTMuNS0zLjUtMS45MjggMC0zLjUgMS41Ny0zLjUgMy41czEuNTcyIDMuNSAzLjUgMy41YzEuOTMgMCAzLjUtMS41NyAzLjUtMy41bS0xMS41IDEuNWMtLjgyNiAwLTEuNS0uNjczLTEuNS0xLjVzLjY3NC0xLjUgMS41LTEuNWExLjUwMSAxLjUwMSAwIDAgMSAwIDNtMC01Yy0xLjkyOCAwLTMuNSAxLjU3LTMuNSAzLjVzMS41NzIgMy41IDMuNSAzLjVjMS45MyAwIDMuNS0xLjU3IDMuNS0zLjVzLTEuNTctMy41LTMuNS0zLjVtMjMuNS02djIwYTEgMSAwIDAgMS0xIDFoLTI2di0yaDI1di0xOGgtMTl2LTJoMjBhMSAxIDAgMCAxIDEgMW0tMzIuOTM2LTIuMTA1YTEuOTggMS45OCAwIDAgMS0xLjk4LTEuOThjMC0xLjA5Ljg4OS0xLjk3OCAxLjk4LTEuOTc4YTEuOTggMS45OCAwIDAgMSAxLjk3OCAxLjk3OSAxLjk4IDEuOTggMCAwIDEtMS45NzggMS45NzltMC01Ljk1OGEzLjk4NCAzLjk4NCAwIDAgMC0zLjk4IDMuOTc5IDMuOTg0IDMuOTg0IDAgMCAwIDMuOTggMy45NzkgMy45ODMgMy45ODMgMCAwIDAgMy45NzgtMy45OCAzLjk4MyAzLjk4MyAwIDAgMC0zLjk3OC0zLjk3OG0yLjYzIDEyLjExMmExIDEgMCAwIDAtLjY5My45NXYxOC41OGwtMS45NCAxLjktMi4wNi0yLjgwN3YtMi42M2ExIDEgMCAwIDAtLjM1MS0uNzYxbC0yLjEwNi0xLjc5MiAyLjEwNi0xLjc5MWMuMjIzLS4xOS4zNS0uNDcuMzUtLjc2MlYzOS4yM2MwLS4yOTMtLjEyNy0uNTcyLS4zNS0uNzYybC0yLjEwNi0xLjc5MSAyLjEwNi0xLjc5MmMuMjIzLS4xOS4zNS0uNDcuMzUtLjc2MnYtMy4xMjdhMSAxIDAgMCAwLS42OTctLjk1M2MtNC4zOC0xLjM4OC02Ljg4Ni01LjY1My01Ljk1OC0xMC4xNDIuNjctMy4yNDYgMy4xNjYtNS44NDggNi4zNTktNi42MzEgMi43MTgtLjY2OCA1LjUwOS0uMDg1IDcuNjUyIDEuNTk2YTguNzQgOC43NCAwIDAgMSAzLjM2OSA2LjkxNyA4LjY3IDguNjcgMCAwIDEtNi4wMzEgOC4yNjJtOC4wMy04LjI2MmExMC43MyAxMC43MyAwIDAgMC00LjEzNC04LjQ5MWMtMi42MjgtMi4wNjItNi4wNC0yLjc4LTkuMzYzLTEuOTY0LTMuOTM3Ljk2NS03LjAxNSA0LjE3LTcuODQxIDguMTY4YTEwLjc1IDEwLjc1IDAgMCAwIDYuNjE1IDEyLjIwNnYxLjk2bC0yLjY0OCAyLjI1M2ExLjAwMiAxLjAwMiAwIDAgMCAwIDEuNTIzbDIuNjQ4IDIuMjU0di43NzhsLTIuNjQ4IDIuMjU0YTEgMSAwIDAgMCAwIDEuNTIzTDE2Ljg0IDQ2LjV2Mi40OTZjMCAuMjEzLjA2OS40Mi4xOTUuNTkybDIuOTM2IDRhMSAxIDAgMCAwIC44MDYuNDA4IDEgMSAwIDAgMCAuNjk5LS4yODZsMy4wNjQtM2ExIDEgMCAwIDAgLjMtLjcxNHYtMTguM2ExMC42NiAxMC42NiAwIDAgMCA2LjcyNC05LjkxMyIvPjwvZz48L3N2Zz4=" x="530" y="96" width="42" height="42"/>
+        <text x="551" y="152" text-anchor="middle" class="lab">KMS key</text>
+        <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUNsb3VkVHJhaWxfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2U3MTU3YiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yMCA0MS45NzRoM1YzOS45NmgtM3ptMi00LjAyNmg2di0yLjAxM2gtNnptMjQuOTYtNy44ODRjLS4yMjYtMi4zMzUtMS40MDQtNC4wNS0zLjI0OC00LjY3Mi0xLjQ3NC0uNDk1LTMuMDgzLS4xOTMtNC4zNjEuNzQ0LS42ODUtMS40NDMtMS42NjMtMy4wMjQtMi42NDktNC4wMDMtMy4yMy0zLjIwOC02Ljk2MS0zLjk1OC0xMS4wODYtMi4yMjUtMy4zNTcgMS40MDQtNi4yMjcgNS41MDItNi41OCA5LjIzMi0xLjg0Ni42NTQtNC4wMjggMi4xMDEtNC45NjIgNC40MDFsMS44NTIuNzYxYy43MjctMS43OSAyLjY5NC0zLjAxMyA0LjMyMS0zLjQzMS40NDMtLjExNC43NTMtLjUxNi43NTMtLjk3NSAwLTMuMDc2IDIuNTY2LTYuOTUgNS4zODUtOC4xMyAzLjQwNC0xLjQzIDYuMjM4LS44NTcgOC45MTMgMS44IDEuMDYxIDEuMDUzIDIuMjM3IDMuMTk1IDIuNzYyIDQuNjU4YTEgMSAwIDAgMCAuNzkyLjY1NC45OC45OCAwIDAgMCAuOTQ3LS4zOWMuODE3LTEuMDk0IDIuMTMtMS41NyAzLjI3OS0xLjE4NiAxLjIyMi40MSAxLjkyMiAxLjcyMyAxLjkyMiAzLjYgMCAuNDkyLjM1NC45MTIuODM2Ljk5MiA0LjA5LjY4NSA2LjE2NCAyLjcyMSA2LjE2NCA2LjA1NCAwIDUuODMzLTUuMzg5IDYuMDM1LTYgNi4wMzlIMjlWNDZoMTdjMi43NjcgMCA4LTEuNjgzIDgtOC4wNTIgMC00LjEwNi0yLjQ5MS02Ljg4Mi03LjA0LTcuODg0TTIyIDQ2aDR2LTIuMDEzaC00em0zLTQuMDI2aDExVjM5Ljk2SDI1em0tMTQgMGg3VjM5Ljk2aC03em0yLTQuMDI2aDZ2LTIuMDEzaC02ek0xNCA0Nmg2di0yLjAxM2gtNnptLTQgMGgydi0yLjAxM2gtMnoiLz48L2c+PC9zdmc+" x="530" y="178" width="42" height="42"/>
+        <text x="551" y="234" text-anchor="middle" class="lab">CloudTrail</text>
+      </svg>
+      <figcaption>The exam pattern: "no public internet" = VPC endpoint; encrypted S3 training data = IAM role with S3 access AND KMS decrypt; "who called the API" = CloudTrail.</figcaption>
+    </figure>
+  </div>
+</section>
+  </div>
+</section>
+
+<section class="domain" id="answers" style="--c:var(--exam)">
+  <h2 class="dh">Fast answers</h2>
+  <div class="flow">
+
+<section class="box pick" style="--c:var(--exam)">
+  <h2>Scenario → service</h2>
+  <div class="in">
+    <table class="kv">
+      <tr><td>Sentiment in text</td><td>Comprehend</td></tr>
+      <tr><td>Speech → text</td><td>Transcribe</td></tr>
+      <tr><td>Text → speech</td><td>Polly</td></tr>
+      <tr><td>Faces / moderation</td><td>Rekognition</td></tr>
+      <tr><td>Scanned forms</td><td>Textract</td></tr>
+      <tr><td>Doc search (NL)</td><td>Kendra</td></tr>
+      <tr><td>Chatbot intents</td><td>Lex</td></tr>
+      <tr><td>Recommendations</td><td>Personalize</td></tr>
+      <tr><td>Human review</td><td>A2I</td></tr>
+      <tr><td>Label data</td><td>Ground Truth</td></tr>
+      <tr><td>FM via API</td><td>Bedrock</td></tr>
+      <tr><td>Company data, no retrain</td><td>RAG / KB</td></tr>
+      <tr><td>Block topics / PII out</td><td>Guardrails</td></tr>
+      <tr><td>Multi-step + APIs</td><td>Bedrock Agents</td></tr>
+      <tr><td>Employee assistant</td><td>Amazon Quick</td></tr>
+      <tr><td>No-code ML</td><td>Canvas</td></tr>
+      <tr><td>Bias / explain</td><td>Clarify</td></tr>
+      <tr><td>Drift in prod</td><td>Model Monitor</td></tr>
+      <tr><td>Cheap train / infer chip</td><td>Trainium / Inferentia</td></tr>
+      <tr><td>No public internet</td><td>VPC endpoint</td></tr>
+      <tr><td>PII in S3</td><td>Macie</td></tr>
+      <tr><td>Who called the API</td><td>CloudTrail</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="box" style="--c:var(--exam)">
+  <h2>Traps that repeat</h2>
+  <div class="in">
+    <ul class="sm">
+      <li><b>Cheapest FM improvement wins</b>: prompt &lt; RAG &lt; fine-tune &lt; pre-train.</li>
+      <li>Temperature/Top K/Top P <b>never change price or latency</b>.</li>
+      <li>"Up-to-date info, no training budget" = <b>RAG</b>, not fine-tuning.</li>
+      <li><b>Kendra</b> searches docs; <b>Personalize</b> recommends products.</li>
+      <li><b>JumpStart</b> = models in <b>YOUR account</b>; Bedrock = managed API.</li>
+      <li>Deterministic, computable problem = <b>write code, not ML</b>.</li>
+      <li>Low latency offline on device = <b>SLM at the edge</b>.</li>
+      <li><b>Recall</b> for missed-case cost, <b>precision</b> for false-alarm cost.</li>
+      <li><b>Provisioned Throughput</b> reserves capacity; <b>Batch</b> saves money.</li>
+      <li>S3: <b>11 nines durability for ALL classes</b>; availability varies.</li>
+    </ul>
+  </div>
+</section>
+  </div>
+</section>
+
+<footer>
+  <p>Built by Sudipto Baral while preparing for the exam. The content is an original condensation of publicly documented AWS facts; studied through Stephane Maarek's AIF-C01 course, which is warmly recommended for full coverage. Service icons are from the official AWS Architecture Icons set; AWS and all service names are trademarks of Amazon.com, Inc. This sheet is unofficial and not affiliated with AWS. Verify exam logistics on the <a href="https://aws.amazon.com/certification/certified-ai-practitioner/">official exam page</a> before booking.</p>
+</footer>
+
+</body>
+</html>
