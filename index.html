@@ -55,8 +55,16 @@
   }
   .chips a {
     font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    text-decoration: none; color: #ffffff; background: var(--c, var(--exam));
+    text-decoration: none; white-space: nowrap;
+    color: var(--c, var(--exam));
+    background: color-mix(in srgb, var(--c, var(--exam)) 10%, var(--panel));
+    border: 1px solid color-mix(in srgb, var(--c, var(--exam)) 35%, var(--panel));
     padding: 4px 12px; border-radius: 99px;
+  }
+  .chips a:hover, .chips a.on { color: #ffffff; background: var(--c, var(--exam)); border-color: var(--c, var(--exam)); }
+  @media (max-width: 720px) {
+    .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .chips::-webkit-scrollbar { display: none; }
   }
   .domain { max-width: 1380px; margin: 0 auto 16px; scroll-margin-top: 84px; }
   .dh {
@@ -773,6 +781,21 @@
 <footer>
   <p>Created by <a href="https://github.com/sudiptob2">Sudipto Baral</a></p>
 </footer>
+<script>
+const navLinks = [...document.querySelectorAll('.chips a[href^="#"]')];
+const navById = Object.fromEntries(navLinks.map((a) => [a.hash.slice(1), a]));
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    const link = navById[entry.target.id];
+    if (!link) return;
+    navLinks.forEach((a) => a.classList.remove('on'));
+    link.classList.add('on');
+    link.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+}, { rootMargin: '-15% 0px -75% 0px' });
+document.querySelectorAll('.domain').forEach((s) => navObserver.observe(s));
+</script>
 
 <script>try { navigator.serviceWorker && navigator.serviceWorker.register('sw.js'); } catch (e) {}</script>
 </body>
